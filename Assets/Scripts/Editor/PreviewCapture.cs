@@ -1,5 +1,7 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using System;
 using System.IO;
 using System.Reflection;
@@ -11,6 +13,7 @@ namespace Hexbound.Editor
     {
         static double next;
         static int step;
+        static Keyboard startKeyboard;
         static PreviewCapture() {
             if (SessionState.GetBool("Hexbound.Capture",false)) EditorApplication.update+=Update;
         }
@@ -36,8 +39,15 @@ namespace Hexbound.Editor
                 if(preview!=null && preview.gameObject.activeSelf) throw new Exception("Edit preview remained active in Play mode");
             }
             if (step==1) game.CapturePreview("Docs/Previews/01-title.png");
-            if (step==2) Invoke(game,"OpenSelect");
-            if (step==3) game.CapturePreview("Docs/Previews/02-select.png");
+            if (step==2) {
+                startKeyboard=InputSystem.AddDevice<Keyboard>();
+                InputSystem.QueueStateEvent(startKeyboard,new KeyboardState(Key.Space));
+            }
+            if (step==3) {
+                var state=typeof(AcademyGame).GetField("screen",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
+                if(state.ToString()!="Select") throw new Exception("Keyboard start did not advance title in normal Play mode");
+                InputSystem.RemoveDevice(startKeyboard); game.CapturePreview("Docs/Previews/02-select.png");
+            }
             if (step==4) {
                 var ready=(bool[])typeof(AcademyGame).GetField("ready",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
                 ready[0]=ready[1]=true;
@@ -74,7 +84,21 @@ namespace Hexbound.Editor
                 if (!model.MatchFinished || model.players[0].wins!=3) throw new Exception("Three ring-out match failed");
             }
             if (step==19) game.CapturePreview("Docs/Previews/07-ringout-result.png");
-            if (step==20) {
+            if(step==20) {
+                Invoke(game,"StartMatch");
+                typeof(AcademyGame).GetField("countdown",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(game,0f);
+                var growth=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
+                growth.elapsed=50;growth.Tick(.016f,default(DuelInput),default(DuelInput));
+                if(growth.RiftArtSize!=172) throw new Exception("Half-time portal art did not grow");
+            }
+            if(step==21) game.CapturePreview("Docs/Previews/12-half-time-portals.png");
+            if(step==22) {
+                var growth=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
+                growth.elapsed=85;growth.Tick(.016f,default(DuelInput),default(DuelInput));
+                if(growth.RiftArtSize!=200) throw new Exception("Final portal art did not grow");
+                game.CapturePreview("Docs/Previews/13-final-portals.png");
+            }
+            if (step==24) {
                 var model=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
                 if (model==null) throw new Exception("No runtime model");
                 Debug.Log("HEXBOUND RUNTIME SMOKE PASSED: academy title, selection, all three arenas with both edge traps, and three-ring-out match result");

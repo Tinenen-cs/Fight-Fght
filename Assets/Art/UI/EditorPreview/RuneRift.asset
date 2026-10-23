@@ -6,22 +6,22 @@ Sprite:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RuneRift
+  m_Name: 
   m_Rect:
     serializedVersion: 2
     x: 0
-    y: 128
-    width: 128
-    height: 128
+    y: 256
+    width: 256
+    height: 256
   m_Offset: {x: 0, y: 0}
   m_Border: {x: 0, y: 0, z: 0, w: 0}
-  m_PixelsToUnits: 88.888885
+  m_PixelsToUnits: 177.77777
   m_Pivot: {x: 0.5, y: 0.5}
   m_Extrude: 0
   m_IsPolygon: 0
   m_PackingTag: 
   m_RenderDataKey:
-    00000000000000000000000000000000: 0
+    1d33b3b2a82da4a65be021f874f068a2: 21300000
   m_AtlasTags: []
   m_SpriteAtlas: {fileID: 0}
   m_RD:
@@ -107,13 +107,13 @@ Sprite:
     textureRect:
       serializedVersion: 2
       x: 0
-      y: 128
-      width: 128
-      height: 128
+      y: 256
+      width: 256
+      height: 256
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
     settingsRaw: 0
-    uvTransform: {x: 88.888885, y: 64, z: 88.888885, w: 192}
+    uvTransform: {x: 177.77777, y: 128, z: 177.77777, w: 384}
     downscaleMultiplier: 1
   m_AtlasRD:
     serializedVersion: 3
@@ -198,13 +198,13 @@ Sprite:
     textureRect:
       serializedVersion: 2
       x: 0
-      y: 128
-      width: 128
-      height: 128
+      y: 256
+      width: 256
+      height: 256
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
     settingsRaw: 0
-    uvTransform: {x: 88.888885, y: 64, z: 88.888885, w: 192}
+    uvTransform: {x: 177.77777, y: 128, z: 177.77777, w: 384}
     downscaleMultiplier: 1
   m_PhysicsShape: []
   m_Bones: []

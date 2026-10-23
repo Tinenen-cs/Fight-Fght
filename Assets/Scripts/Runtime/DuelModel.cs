@@ -47,7 +47,9 @@ namespace Hexbound
         public bool RiftsOpen => true;
         public const int KnockdownHits=5;
         public const float LeftRiftX=100, RightRiftX=1180;
-        public static bool OverRift(float x) => Math.Abs(x-LeftRiftX)<36 || Math.Abs(x-RightRiftX)<36;
+        public float RiftRadius => remaining<=15 ? 60 : remaining<=49.5f ? 48 : 36;
+        public float RiftArtSize => remaining<=15 ? 200 : remaining<=49.5f ? 172 : 144;
+        public static bool OverRift(float x,float radius=36) => Math.Abs(x-LeftRiftX)<radius || Math.Abs(x-RightRiftX)<radius;
         readonly int startingArena;
         public int ArenaIndex => (startingArena+round-1)%3;
         public DuelModel(int p1, int p2, int arena=0) { startingArena=Math.Max(0,Math.Min(2,arena)); players = new[] { new Fighter(p1, 410, 1), new Fighter(p2, 870, -1) }; }
@@ -82,8 +84,8 @@ namespace Hexbound
                 float sign = gap>=0 ? 1 : -1, separation=(55-Math.Abs(gap))/2;
                 p.x-=separation*sign; q.x+=separation*sign;
             }
-            bool fall0 = RiftsOpen && OverRift(p.x) && p.height<12;
-            bool fall1 = RiftsOpen && OverRift(q.x) && q.height<12;
+            bool fall0 = RiftsOpen && OverRift(p.x,RiftRadius) && p.height<12;
+            bool fall1 = RiftsOpen && OverRift(q.x,RiftRadius) && q.height<12;
             if (fall0 || fall1) {
                 p.fallen=fall0; q.fallen=fall1;
                 sounds.Add("fall"); Finish(fall0 && fall1 ? -1 : fall0 ? 1 : 0,"RIFT RING OUT");

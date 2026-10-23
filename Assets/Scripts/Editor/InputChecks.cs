@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -63,6 +64,27 @@ namespace Hexbound.Editor
                 Check(input.Prompt(0,"Punch")=="SQUARE" && input.Prompt(0,"Confirm")=="CROSS","PlayStation positional prompts");
                 InputSystem.QueueStateEvent(keyboard,new KeyboardState(Key.F));InputSystem.Update();input.Poll(.8f);
                 Check(input.Prompt(0,"Punch")=="F" && input.Prompt(1,"Push")=="B","keyboard prompt switches only its own player");
+                var game=UnityEngine.Object.FindFirstObjectByType<AcademyGame>();
+                Check(game!=null,"runtime game exists for start regression checks");
+                var type=typeof(AcademyGame);var screen=type.GetField("screen",BindingFlags.Instance|BindingFlags.NonPublic);
+                var update=type.GetMethod("Update",BindingFlags.Instance|BindingFlags.NonPublic);
+                var title=Enum.Parse(screen.FieldType,"Title");
+                screen.SetValue(game,title);
+                InputSystem.QueueStateEvent(keyboard,new KeyboardState(Key.Space));InputSystem.Update();update.Invoke(game,null);
+                Check(screen.GetValue(game).ToString()=="Select","actual game Update starts from arbitrary keyboard key");
+                InputSystem.QueueStateEvent(keyboard,new KeyboardState());InputSystem.Update();
+                var mouse=InputSystem.AddDevice<Mouse>();screen.SetValue(game,title);
+                InputSystem.QueueStateEvent(mouse,new MouseState { buttons=1 });InputSystem.Update();update.Invoke(game,null);
+                Check(screen.GetValue(game).ToString()=="Select","actual game Update starts from mouse click");
+                InputSystem.RemoveDevice(mouse);
+                var eventHandler=type.GetMethod("TryStartFromEvent",BindingFlags.Instance|BindingFlags.NonPublic);
+                foreach(var eventType in new[]{EventType.KeyDown,EventType.MouseDown}) {
+                    screen.SetValue(game,title);
+                    bool handled=(bool)eventHandler.Invoke(game,new object[]{eventType});
+                    Check(handled && screen.GetValue(game).ToString()=="Select","Game view event fallback starts on "+eventType);
+                }
+                screen.SetValue(game,title);
+                Check(!(bool)eventHandler.Invoke(game,new object[]{EventType.Repaint}) && screen.GetValue(game).ToString()=="Title","repaint never starts game");
                 InputSystem.RemoveDevice(replacement);
             }
             InputSystem.RemoveDevice(b);InputSystem.RemoveDevice(keyboard);

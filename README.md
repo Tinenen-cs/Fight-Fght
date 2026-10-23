@@ -62,7 +62,7 @@ The live task list is [Docs/TODO.md](Docs/TODO.md). Per-action artwork progress 
 
 ## Features
 
-- Athletic academy fighters and detailed pixel environments, enlarged with point filtering.
+- Athletic academy fighters and detailed pixel environments, rendered from higher-resolution art with bilinear filtering.
 - Four female and four male magical human characters, each with a signature weapon and power.
 - Idle, walk, punch, hurt, knockout, combo, spell, power, shove and jump animation rows.
 - Mana regeneration and mana gains on melee contact; stronger attacks require resource management.
@@ -118,7 +118,7 @@ Assets/
   Resources/Stages/            three pixel arena backgrounds
   Resources/Audio/Music/       title/select + three arena loops
   Resources/Audio/SFX/         twelve original sound cues
-  Resources/UI/                pixel font
+  Resources/UI/                wizard-style fonts and interface art
   Art/Fonts/                   font license
   Art/UI/                      reserved for future interface artwork
   Animations/                  reserved for future Animator controllers
@@ -141,9 +141,9 @@ All music and sound effects are original synthesis from `Tools/generate_wizard_a
 
 Each fighter starts from a separately generated single-character reference. Every action is generated in its own four-frame request (a 2 × 2 source sequence), then `Tools/assemble_sequences.py` assembles the ten actions into the runtime sheet. Character references, sequence sources and full prompts are stored in `Assets/Art/CharacterReferences`, `Assets/Art/CharacterSequences` and `Docs/animation_sequence_manifest.json`.
 
-Arenas, eight element-effect sheets and interface panels were generated as separate assets with the built-in image tool; source PNGs and prompts are preserved in `Assets/Art` and `Docs/academy_art_manifest.json`. The academy backgrounds are sampled at 640 × 360 and enlarged with point filtering to retain deliberate pixel texture. The supplied screenshots guide layout, athletic body proportions and environmental richness. No Tekken or Street Fighter assets are included.
+Arenas, eight element-effect sheets and interface panels were generated as separate assets with the built-in image tool; source PNGs and prompts are preserved in `Assets/Art` and `Docs/academy_art_manifest.json`. The academy backgrounds are sampled at 640 × 360 and rendered from higher-resolution art with bilinear filtering to retain deliberate pixel texture. The supplied screenshots guide layout, athletic body proportions and environmental richness. No Tekken or Street Fighter assets are included.
 
-Tiny5 comes from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/tiny5), licensed under the SIL Open Font License; see `Assets/Art/Fonts/Tiny5-OFL.txt`. README organization follows the user's [Balance-with-me](https://github.com/Tinenen-cs/Balance-with-me) reference; its game code and artwork were not copied. No repository-wide license has been chosen.
+The active interface uses Cinzel, Cinzel Decorative and EB Garamond from Google Fonts, licensed under the included SIL Open Font Licenses in `Assets/Art/Fonts`. Tiny5 remains an unused legacy asset. README organization follows the user's [Balance-with-me](https://github.com/Tinenen-cs/Balance-with-me) reference; its game code and artwork were not copied. No repository-wide license has been chosen.
 
 ## How to run
 
@@ -233,3 +233,11 @@ The five large top segments show remaining poise, not lives. Each clean hit remo
 Music switches automatically when the selected arena starts and when moving to the next arena. Twelve replacement effects cover crystalline menus, ward blocks, spell casts, power surges and portal falls. Audio metrics, titles and reproduction details are recorded in `Docs/audio_manifest.json`. Physical listening/volume tuning remains part of your Mac playtest.
 
 The active fight view keeps plain head portraits, names, five poise segments, a thin arcana meter, round markers, timer and four diamond ability icons per player. Only small key/controller badges appear on the icons. Device labels, large control legends, cost descriptions, stage banners and rule footers are removed from combat; press H or View/Share for details.
+
+## Start-screen fix and growing portals
+
+The title accepts individual keyboard press edges (including a new key while another is held), mouse clicks, controller buttons and direct Game-view key/mouse events. Legacy keyboard handling remains available alongside the Input System. Click the Game view after pressing Play.
+
+The portal grows at **49.5 seconds remaining** and again at **15 seconds remaining**. Art grows from 144 → 172 → 200 logical pixels, while the grounded fall radius grows from 36 → 48 → 60 pixels. Jumping still clears it; timeout remains a draw. Both reset at the next round. Larger 72px attack diamonds are positioned inward, clear of portals even at maximum growth.
+
+Higher-resolution fighter frames and scenery, full color, smooth texture filtering and wizard-style fonts reduce the chunky pixel appearance without replacing character identities or animation poses.

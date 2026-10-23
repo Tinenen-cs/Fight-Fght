@@ -112,6 +112,23 @@ namespace Hexbound
             d.players[1].knockdownTime=1; d.elapsed=98.99f;
             d.Tick(.02f,default(DuelInput),default(DuelInput));
             Check(d.winner==-1 && !d.players[1].fallen,"timeout with downed fighter is still draw");
+            foreach(float center in new[]{DuelModel.LeftRiftX,DuelModel.RightRiftX}) {
+                float direction=center<640?1:-1;
+                d=new DuelModel(0,4);d.players[0].x=center+direction*43;d.elapsed=49.48f;
+                d.Tick(.001f,default(DuelInput),default(DuelInput));
+                Check(!d.Finished && d.RiftRadius==36,"normal portal remains narrow before half time");
+                d.elapsed=49.51f;d.Tick(.001f,default(DuelInput),default(DuelInput));
+                Check(d.winner==1 && d.RiftRadius==48 && d.RiftArtSize==172,"half-time portal grows and eliminates in new area");
+                d=new DuelModel(0,4);d.players[0].x=center+direction*55;d.elapsed=83.98f;
+                d.Tick(.001f,default(DuelInput),default(DuelInput));
+                Check(!d.Finished && d.RiftRadius==48,"half-time portal excludes final expansion area");
+                d.elapsed=84.01f;d.Tick(.001f,default(DuelInput),default(DuelInput));
+                Check(d.winner==1 && d.RiftRadius==60 && d.RiftArtSize==200,"final fifteen seconds grow portal and collision together");
+            }
+            d=new DuelModel(0,4);d.elapsed=85;d.players[0].x=DuelModel.LeftRiftX+55;d.players[0].height=80;
+            d.Tick(.016f,default(DuelInput),default(DuelInput));Check(!d.Finished,"jumping clears enlarged portal");
+            d=new DuelModel(0,4);d.elapsed=98.99f;d.Tick(.02f,default(DuelInput),default(DuelInput));
+            Check(d.winner==-1,"enlarged portals still permit time-up draw");
             return count;
         }
     }

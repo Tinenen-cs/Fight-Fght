@@ -99,3 +99,13 @@ Open `Assets/Scenes/Main.unity`, press Play, any key, then F and J to lock the d
 - [x] Simplify the fight view to icons and compact binding badges; move extra information into help.
 - [x] Check audio waveform identity, stereo format, peak headroom and loop boundaries.
 - [ ] Listen on the Mac and tune the new scores/SFX balance with two players.
+
+## Start, readability and timed portal growth
+
+- [x] Fix start detection for individual keyboard edges, mouse input and direct Game-view key/mouse events.
+- [x] Add actual game-update start regression checks and shared-backend keyboard fallback.
+- [x] Enlarge diamond guides to 72px and keep them clear of maximum-size portals.
+- [x] Replace active pixel fonts with Cinzel / Cinzel Decorative / EB Garamond.
+- [x] Rebuild 256px fighter frames, 1280×720 stages and higher-resolution VFX/portraits/icons; preserve full source color and enable bilinear filtering.
+- [x] Grow portal art and collision together at half-time and final 15 seconds; verify both sides, jumping and timeout draws.
+- [x] Pass 73 combat and 22 input/start assertions.

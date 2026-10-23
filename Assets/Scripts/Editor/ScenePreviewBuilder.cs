@@ -35,9 +35,12 @@ namespace Hexbound.Editor
         static Sprite Sprite(string name,string resource,Rect rect,Vector2 pivot,float pixelsPerUnit)
         {
             string path=SpriteFolder+"/"+name+".asset";
-            var existing=AssetDatabase.LoadAssetAtPath<Sprite>(path); if (existing!=null) return existing;
+            var existing=AssetDatabase.LoadAssetAtPath<Sprite>(path);
             var texture=Resources.Load<Texture2D>(resource);
-            var sprite=UnityEngine.Sprite.Create(texture,rect,pivot,pixelsPerUnit,0,SpriteMeshType.FullRect);
+            float scale=resource.StartsWith("Characters/")?texture.width/512f:resource=="Stages/RuneRift"?texture.width/256f:texture.width/640f;
+            rect=new Rect(rect.x*scale,rect.y*scale,rect.width*scale,rect.height*scale);
+            var sprite=UnityEngine.Sprite.Create(texture,rect,pivot,pixelsPerUnit*scale,0,SpriteMeshType.FullRect);
+            if(existing!=null) { EditorUtility.CopySerialized(sprite,existing); Object.DestroyImmediate(sprite); EditorUtility.SetDirty(existing); return existing; }
             sprite.name=name; AssetDatabase.CreateAsset(sprite,path); return sprite;
         }
         static SpriteRenderer Add(GameObject root,string name,Sprite sprite,Vector3 position,int order)

@@ -51,3 +51,9 @@ The mirrored top HUD follows the supplied fighting-game arrangement: outer head 
 `AcademyInputManager` owns a cloned editable `AcademyControls.inputactions` asset. Each player map includes its own keyboard controls and filters devices to the shared keyboard plus one assigned gamepad. Stable slots survive other controllers disconnecting. Menus use stick/D-pad repeat, south confirm, east back; Start/Options pauses and View/Share opens help. Combat continues to use the pure `DuelInput` model. Lower-side diamond clusters display dedicated character-specific ability icons with compact key/button badges, with casting auras supplementing projectiles and hit bursts.
 
 The final fight presentation omits device names, full controls legends, costs, stage banners and rules text. All of that remains in the handbook. Head portraits have no circular frame. Diamond control clusters use explicit bounds below the entire portal image. Original chamber-fantasy scores and magical transients are synthesized by `Tools/generate_wizard_audio.py`, with independent compositions per arena rather than pitch-shifted copies.
+
+## Timed portal growth and readability
+
+At 49.5 seconds remaining, portal art grows to 172px and fall radius to 48px. At 15 seconds remaining it reaches 200px and radius 60px; normal values are 144px/36px. Grounded collision follows the current radius, jumping still clears the opening, and each round resets growth. Both edge traps use identical thresholds.
+
+The enlarged 72px control diamonds sit in inward-facing clusters, with maximum portal bounds used for overlap assertions. The presentation now uses native 1280×720 backgrounds, 256px fighter frames, full source colors, bilinear texture sampling and Cinzel/Garamond typography. The title checks each physical key separately, combines mouse/controller and legacy keyboard paths, and accepts Game-view GUI key/mouse events as a fallback. Full instructions remain in help.

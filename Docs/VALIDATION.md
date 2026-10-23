@@ -8,7 +8,7 @@ The original prototype was verified on **6000.2.2f1**. The currently open user E
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| Pure C# combat rules | **63 assertions passed** | `Tools/test_rules.sh`, using installed Unity Mono |
+| Pure C# combat rules | **73 assertions passed** | `Tools/test_rules.sh`, using installed Unity Mono |
 | Unity compile and asset import | **Passed** on **6000.2.2f1** | Batch entry point `Hexbound.Editor.ProjectSetup.ValidateBatch` |
 | Character assets | Eight sheets, eight avatars and eight effect sheets loaded | Unity batch validation |
 | Audio import | All 16 WAV assets loaded | Unity batch validation |
@@ -137,3 +137,17 @@ The simplified combat screen has plain head portraits and no circular head frame
 ![Dedicated diamond abilities](Previews/11-ability-icons.png)
 
 Final graphical inspection passed with the minimal fight HUD, unframed head portraits, five poise bars, larger diamond icons with key-only badges, unobstructed portals and a flat afternoon floor. The three-stage runtime smoke passed and verified music switching after each arena change.
+
+## Start-screen regression, smoothing and timed portals
+
+- **73 combat assertions pass**: both edge portals expand at 49.5 and 15 seconds remaining, newly covered ground becomes hazardous, jumping clears the enlarged opening and timeout still draws. Five-hit knockdown remains temporary.
+- **22 input/start assertions pass**: keyboard and mouse start through the actual AcademyGame.Update path; a keypress while another key is held also starts. Direct Game-view key/mouse event handling accepts start events and rejects repaint. Keyboard/Xbox/PlayStation mapping, navigation, disconnect/replacement and prompt-isolation checks remain covered.
+- Normal graphical Play-mode smoke starts by injecting a keyboard press, then asserts character selection appears. It no longer bypasses title input by calling OpenSelect. The three-stage flow, music changes, spell effect and ring-out result pass. Additional captures verify half-time and final portal sizes.
+- Runtime art is rebuilt from committed sources at higher resolution, with bilinear filtering and full source color. Wizard fonts import successfully. Enlarged 72px controls are checked against both maximum-size portal bounds.
+- The saved native scene preview renders successfully before Play using updated high-resolution sprite assets. Your open Editor session is preserved; tests run in a separate project copy.
+
+Physical controller pairing, human keyboard feel and listening remain manual checks. The existing Unity Editor Search startup exception is external to the game and remains documented above.
+
+![Half-time portals](Previews/12-half-time-portals.png)
+
+![Final fifteen-second portals](Previews/13-final-portals.png)

@@ -6,22 +6,22 @@ Sprite:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Alden
+  m_Name: 
   m_Rect:
     serializedVersion: 2
     x: 0
-    y: 1152
-    width: 128
-    height: 128
-  m_Offset: {x: 0, y: -52}
+    y: 2304
+    width: 256
+    height: 256
+  m_Offset: {x: 0, y: -104}
   m_Border: {x: 0, y: 0, z: 0, w: 0}
-  m_PixelsToUnits: 66.666664
+  m_PixelsToUnits: 133.33333
   m_Pivot: {x: 0.5, y: 0.09375}
   m_Extrude: 0
   m_IsPolygon: 0
   m_PackingTag: 
   m_RenderDataKey:
-    00000000000000000000000000000000: 0
+    1eefd0b5b9a6345fcba028f7f1ad61e3: 21300000
   m_AtlasTags: []
   m_SpriteAtlas: {fileID: 0}
   m_RD:
@@ -107,13 +107,13 @@ Sprite:
     textureRect:
       serializedVersion: 2
       x: 0
-      y: 1152
-      width: 128
-      height: 128
+      y: 2304
+      width: 256
+      height: 256
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
     settingsRaw: 0
-    uvTransform: {x: 66.666664, y: 64, z: 66.666664, w: 1164}
+    uvTransform: {x: 133.33333, y: 128, z: 133.33333, w: 2328}
     downscaleMultiplier: 1
   m_AtlasRD:
     serializedVersion: 3
@@ -198,13 +198,13 @@ Sprite:
     textureRect:
       serializedVersion: 2
       x: 0
-      y: 1152
-      width: 128
-      height: 128
+      y: 2304
+      width: 256
+      height: 256
     textureRectOffset: {x: 0, y: 0}
     atlasRectOffset: {x: -1, y: -1}
     settingsRaw: 0
-    uvTransform: {x: 66.666664, y: 64, z: 66.666664, w: 1164}
+    uvTransform: {x: 133.33333, y: 128, z: 133.33333, w: 2328}
     downscaleMultiplier: 1
   m_PhysicsShape: []
   m_Bones: []

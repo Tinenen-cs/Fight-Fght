@@ -7,14 +7,15 @@ namespace Hexbound.Editor
 {
     public sealed class PixelImport : AssetPostprocessor
     {
+        public override uint GetVersion() => 2;
         void OnPreprocessTexture()
         {
             if (!assetPath.StartsWith("Assets/Resources/")) return;
             var t=(TextureImporter)assetImporter;
             t.textureType=TextureImporterType.Default;
-            t.filterMode=FilterMode.Point; t.textureCompression=TextureImporterCompression.Uncompressed;
+            t.filterMode=FilterMode.Bilinear; t.textureCompression=TextureImporterCompression.Uncompressed;
             t.mipmapEnabled=false; t.alphaIsTransparency=true; t.npotScale=TextureImporterNPOTScale.None;
-            t.maxTextureSize=2048; t.wrapMode=TextureWrapMode.Clamp;
+            t.maxTextureSize=4096; t.wrapMode=TextureWrapMode.Clamp;
         }
     }
     [InitializeOnLoad]
@@ -75,7 +76,7 @@ namespace Hexbound.Editor
             for(int side=0;side<2;side++) for(int action=0;action<4;action++) {
                 Rect icon=CombatHudLayout.Ability(side,action);
                 Require(icon.yMin>=CombatHudLayout.ControlsTop,"controls remain below portal-safe boundary");
-                Require(!icon.Overlaps(CombatHudLayout.Portal(DuelModel.LeftRiftX)) && !icon.Overlaps(CombatHudLayout.Portal(DuelModel.RightRiftX)),"controls never cover either portal");
+                Require(!icon.Overlaps(CombatHudLayout.Portal(DuelModel.LeftRiftX,200)) && !icon.Overlaps(CombatHudLayout.Portal(DuelModel.RightRiftX,200)),"controls never cover either portal");
             }
             Require(Resources.Load<UnityEngine.InputSystem.InputActionAsset>("Input/AcademyControls")!=null,"editable input action maps");
             for (int i=0;i<8;i++) {
@@ -86,8 +87,9 @@ namespace Hexbound.Editor
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/abilities")!=null,"diamond ability icons "+i);
                 Require(Resources.Load<Texture2D>("Effects/"+Roster.Files[i])!=null,"effect "+i);
                 var sheet=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/sheet");
-                Require(sheet.width==512 && sheet.height==1280,"128-pixel fighter atlas "+i);
+                Require(sheet.width==1024 && sheet.height==2560,"256-pixel fighter atlas "+i);
             }
+            Require(Resources.Load<Font>("UI/Cinzel")!=null && Resources.Load<Font>("UI/EBGaramond")!=null,"wizard interface fonts");
             Require(Resources.Load<Texture2D>("Stages/RuneRift")!=null,"rune rift");
             Require(Resources.Load<Texture2D>("UI/AcademyPanel")!=null,"academy panel skin");
             Require(Resources.Load<Texture2D>("UI/AcademyButton")!=null,"academy button skin");
