@@ -1,8 +1,8 @@
 # Hexbound: Academy Duel
 
-A local **two-player, 2D pixel-art magical fighting prototype** made with Unity and edited in VS Code. Four witches and four wizards duel across a haunted forest, an academy library, and an astral observatory. Attack, chain a three-strike combo, cast spells, guard, jump, and shove your opponent into an opening manhole.
+A local **two-player, 2D pixel-art magical fighting prototype** made with Unity and edited in VS Code. Four witches and four wizards duel across an academy gate courtyard, a grand library hall, and an observatory terrace. Attack, chain a three-strike combo, cast spells, guard, jump, and shove your opponent into a forbidden rune rift.
 
-The supplied fighting-game screenshots inspire the **UI arrangement only**: opposing character cards, a portrait selection grid, mirrored health bars, and a central timer. All fighter and arena artwork is original procedural pixel art. This is a student prototype with simple sprites and synthesized audio, ready for iteration rather than a finished commercial fighting game.
+The supplied fighting-game screenshots inspire the **UI arrangement only**: opposing character cards, a portrait selection grid, mirrored player panels, and a central timer. Fighters use athletic, proportioned bodies inspired by the supplied fighting-game roster, fitted magical academy uniforms, and smaller heads. Each four-frame action sequence is generated separately from a consistent character reference, then assembled into a runtime sheet. The three detailed academy arenas retain visible pixel texture, and the interface uses matching walnut, brass and midnight-blue panels. This is a student prototype with synthesized audio, ready for iteration rather than a finished commercial fighting game.
 
 ![Character selection preview](Docs/Previews/02-select.png)
 
@@ -25,35 +25,35 @@ Repository: **[Tinenen-cs/Fight-Fght](https://github.com/Tinenen-cs/Fight-Fght)*
 | Intro → selection → combat | Animated title, eight portrait cards, individual lock-in buttons | `AcademyGame` |
 | Basic attacks | Short attack startup, one hit per strike, reach and height checks | `DuelModel` |
 | Combo | Tap punch three times about 0.35–0.65 seconds apart; the third strike hits harder | `DuelModel` |
-| Spells | Eight profiles with different projectile speeds, damage and knockback | `DuelModel` |
+| Spells | Eight profiles with different projectile speeds, magic and knockback | `DuelModel` |
 | Power attack | Enhanced spell costs 60 arcana; regular spell costs 20 | `DuelModel` |
-| Guard / jump / shove | Reduce damage, clear hazards, push without health damage | `DuelModel` |
-| Win a round | Reduce health to zero, force a ring-out, or have more health at timeout | `DuelModel` |
+| Guard / jump / shove | Reduce knockback, clear hazards, push the opponent | `DuelModel` |
+| Win a round | Force the rival into an edge rune rift; no health, damage or life depletion | `DuelModel` |
 | Three stages | Exactly three rounds, one per arena, including draws; most wins takes match | `DuelModel` |
 | Timer | Each round starts with a three-second preparation count, then 99 seconds | `AcademyGame`, `DuelModel` |
-| Manhole twist | Opens after 8 seconds; alternates 7 seconds open / 7 closed, with 2-second warning | `DuelModel` |
+| Rune rift twist | Two permanently open rune rifts, one at each stage edge; the center is clear | `DuelModel` |
 
 ### Recording a short demonstration
 
 1. Start the title screen, then choose different fighters for both players.
-2. Lock in with **F** and **J**. Show the countdown, health bars, arcana meters and timer.
+2. Lock in with **F** and **J**. Show the countdown, player cards, arcana meters and timer.
 3. Move close, demonstrate punching, a three-hit combo, guarding, and a shove.
 4. Cast a spell, then build enough arcana for a power attack.
-5. Wait for the manhole warning. Jump over it or push the opponent in while open.
+5. Show the exposed rune rift. Jump across it or force the opponent in using attacks and powers.
 6. Play all three arenas. Press Enter after each result; the final screen names the overall champion or a draw.
 
 ## Status
 
-The live task list is [Docs/TODO.md](Docs/TODO.md). Evidence and limitations are in [Docs/VALIDATION.md](Docs/VALIDATION.md).
+The live task list is [Docs/TODO.md](Docs/TODO.md). Per-action artwork progress is in [Docs/ART_PROGRESS.md](Docs/ART_PROGRESS.md). Evidence and limitations are in [Docs/VALIDATION.md](Docs/VALIDATION.md).
 
 | Step | Feature | Status |
 | --- | --- | --- |
 | 1 | Organized Unity project, scene, source and VS Code recommendations | Implemented |
-| 2 | Eight fighters, eight avatars, 320 character frames | Included |
+| 2 | Eight athletic academy fighters, eight matching avatars, 320 character frames | Included |
 | 3 | Per-fighter animated magic sheets: 64 effect frames | Included |
 | 4 | Title, two-player selection, combat HUD, pause and results | Implemented |
 | 5 | Three arenas and 99-second rounds | Implemented |
-| 6 | Combat, combo, spells, power attacks, guard, jump and manhole | Implemented |
+| 6 | Combat, combo, spells, power attacks, guard, jump and rune rift | Implemented |
 | 7 | Four music loops and twelve sound effects | Included and connected |
 | 8 | Automated combat checks / Unity import and compile | Passed; see validation notes |
 | 9 | Two-person hardware playtest | Pending |
@@ -61,29 +61,33 @@ The live task list is [Docs/TODO.md](Docs/TODO.md). Evidence and limitations are
 
 ## Features
 
-- Original dark-academia art at small source resolutions, enlarged with point filtering.
+- Athletic academy fighters and detailed pixel environments, enlarged with point filtering.
 - Four female and four male magical human characters, each with a signature weapon and power.
 - Idle, walk, punch, hurt, knockout, combo, spell, power, shove and jump animation rows.
 - Mana regeneration and mana gains on melee contact; stronger attacks require resource management.
 - Direction automatically faces the other fighter. Jumping lets fighters pass one another.
-- Ambient chiptune loops for selection and each arena; cues for movement, combat, UI, warnings and results.
+- Ambient chiptune loops for selection and each arena; cues for movement, combat, UI, timer alerts and results.
 - Focus loss pauses combat. Escape pauses/resumes, H opens help, and M saves a mute preference.
 - No external runtime packages; built-in Unity modules keep initial setup small.
+
+**Ring-out-only rules:** attacks never remove life. A grounded fighter over an edge rune rift falls and loses the round. If 99 seconds expire without a fall, the round is a draw. Arcana is a spell resource, not health.
+
+![Academy fighter roster](Docs/Previews/04-roster.png)
 
 ## Characters
 
 | Fighter | Character | Power | Weapon | Power attack |
 | --- | --- | --- | --- | --- |
-| Lyra | Girl / Ember scholar | Fire | Ember wand | Phoenix surge |
-| Mira | Girl / Frost duelist | Ice | Glacier blade | Winter verdict |
-| Selene | Girl / Moon archivist | Lunar magic | Lunar staff | Eclipse wave |
-| Iris | Girl / Thorn alchemist | Nature | Thorn rapier | Briar bloom |
-| Alden | Boy / Storm prefect | Lightning | Storm hammer | Thunder oath |
-| Rowan | Boy / Stone warden | Earth | Oak spear | Mountain breaker |
-| Orion | Boy / Void astronomer | Gravity | Gravity orb | Event horizon |
-| Dorian | Boy / Rune exile | Blood runes | Runic scythe | Crimson seal |
+| Emberlyn Ashveil | Girl / Ember scholar | Fire | Ember wand | Phoenix surge |
+| Isolde Frostquill | Girl / Frost duelist | Ice | Glacier blade | Winter verdict |
+| Luneth Noctivale | Girl / Moon archivist | Lunar magic | Lunar staff | Eclipse wave |
+| Briar Mosswhisper | Girl / Thorn alchemist | Nature | Thorn rapier | Briar bloom |
+| Caelum Stormcrest | Boy / Storm prefect | Lightning | Storm hammer | Thunder oath |
+| Flint Oakwarden | Boy / Stone warden | Earth | Oak spear | Mountain breaker |
+| Vesper Stargrave | Boy / Void astronomer | Gravity | Gravity orb | Event horizon |
+| Corvin Hexthorn | Boy / Rune exile | Blood runes | Runic scythe | Crimson seal |
 
-Spell names are thematic: the first prototype distinguishes damage, speed, knockback, color and particle motifs. Ice does not yet freeze, and earth does not create terrain. All fighters share a basic melee moveset.
+Spell names are thematic: the first prototype distinguishes speed, knockback, color and particle motifs. Ice does not yet freeze, and earth does not create terrain. All fighters share a basic melee moveset.
 
 ## Controls
 
@@ -134,7 +138,9 @@ All music and sound effects are original synthesis from `Tools/generate_assets.p
 
 ## Art and font credits
 
-Pixel characters, avatars, magic and environments are authored through the included deterministic Python pixel-drawing generator. The supplied screenshots were used only to guide UI placement. No Tekken or Street Fighter characters or assets are included.
+Each fighter starts from a separately generated single-character reference. Every action is generated in its own four-frame request (a 2 × 2 source sequence), then `Tools/assemble_sequences.py` assembles the ten actions into the runtime sheet. Character references, sequence sources and full prompts are stored in `Assets/Art/CharacterReferences`, `Assets/Art/CharacterSequences` and `Docs/animation_sequence_manifest.json`.
+
+Arenas, eight element-effect sheets and interface panels were generated as separate assets with the built-in image tool; source PNGs and prompts are preserved in `Assets/Art` and `Docs/academy_art_manifest.json`. The academy backgrounds are sampled at 640 × 360 and enlarged with point filtering to retain deliberate pixel texture. The supplied screenshots guide layout, athletic body proportions and environmental richness. No Tekken or Street Fighter assets are included.
 
 Tiny5 comes from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/tiny5), licensed under the SIL Open Font License; see `Assets/Art/Fonts/Tiny5-OFL.txt`. README organization follows the user's [Balance-with-me](https://github.com/Tinenen-cs/Balance-with-me) reference; its game code and artwork were not copied. No repository-wide license has been chosen.
 
@@ -169,7 +175,7 @@ Desktop source may be opened with Unity, but Windows/Linux and standalone builds
 - **No sound:** press M, disable the Game view mute toggle, and check macOS output volume.
 - **Spell does not start:** regular spells require 20 arcana, power attacks 60. Wait for regeneration or land melee hits.
 - **Punch misses:** move closer and be at a similar height. Combo taps must be separated by the attack cooldown.
-- **Drain loss:** do not stand on the manhole while open. Jumping clears it; guarding reduces shove force.
+- **Drain loss:** do not stand over the open rune rift. Jumping clears it; guarding reduces shove force.
 - **Scene generation warns about unsaved work:** save your untitled scene, then use Hexbound → Open Main Scene.
 
 ## Contributing
@@ -184,4 +190,4 @@ Desktop source may be opened with Unity, but Windows/Linux and standalone builds
    git push origin main
    ```
 
-Do not commit Unity caches, credentials, local logs, or generated application builds. To regenerate artwork and audio, run `python3 Tools/generate_assets.py` and let Unity reimport. See [Docs/ASSET_GUIDE.md](Docs/ASSET_GUIDE.md) before changing sheet dimensions.
+Do not commit Unity caches, credentials, local logs, or generated application builds. To rebuild runtime art from committed sources, install Pillow and run `python3 Tools/import_academy_art.py`, then `python3 Tools/assemble_sequences.py`. `python3 Tools/generate_assets.py` regenerates audio and only fills missing legacy artwork; existing final art is preserved and let Unity reimport. See [Docs/ASSET_GUIDE.md](Docs/ASSET_GUIDE.md) before changing sheet dimensions.

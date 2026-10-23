@@ -12,16 +12,16 @@ namespace Hexbound
     public sealed class Fighter
     {
         public int character, wins, combo, facing;
-        public float x, height, verticalSpeed, knockback, health = 100, mana = 35;
+        public float x, height, verticalSpeed, knockback, mana = 35;
         public float actionTime, actionLength, stun, comboWindow, stepClock;
-        public bool blocking, attackPending;
+        public bool blocking, attackPending, fallen;
         public Pose pose;
         public Fighter(int character, float x, int facing) { this.character = character; this.x = x; this.facing = facing; }
     }
     public sealed class Spell
     {
         public int owner, character, direction;
-        public float x, height, life = 2, speed, damage, force;
+        public float x, height, life = 2, speed, force;
         public bool ultimate;
     }
     public sealed class Burst
@@ -42,9 +42,9 @@ namespace Hexbound
         public string reason = "";
         public bool Finished => winner != -2;
         public bool MatchFinished => Finished && round == 3;
-        public bool HoleOpen => elapsed >= 8 && ((int)(elapsed - 8) / 7) % 2 == 0;
-        public bool HoleWarning => elapsed >= 6 && !HoleOpen && (elapsed < 8 || ((elapsed - 8) % 14) >= 12);
-        public float HoleX => round == 1 ? 640 : round == 2 ? 755 : 525;
+        public bool RiftsOpen => true;
+        public const float LeftRiftX=100, RightRiftX=1180;
+        public static bool OverRift(float x) => Math.Abs(x-LeftRiftX)<36 || Math.Abs(x-RightRiftX)<36;
         public DuelModel(int p1, int p2) { players = new[] { new Fighter(p1, 410, 1), new Fighter(p2, 870, -1) }; }
         public void NextRound()
         {
@@ -68,7 +68,7 @@ namespace Hexbound
                 var s = spells[i]; s.x += s.direction*s.speed*dt; s.life -= dt;
                 Fighter target = players[1-s.owner];
                 if (Math.Abs(s.x-target.x)<40 && Math.Abs(s.height-target.height)<75) {
-                    Hit(target,s.damage,s.direction*s.force,s.character,s.ultimate); spells.RemoveAt(i);
+                    Hit(target,s.direction*s.force,s.character,s.ultimate); spells.RemoveAt(i);
                 } else if (s.life <= 0 || s.x < 0 || s.x > 1280) spells.RemoveAt(i);
             }
             // Solid bodies; fighters can cross by jumping over one another.
@@ -77,13 +77,12 @@ namespace Hexbound
                 float sign = gap>=0 ? 1 : -1, separation=(55-Math.Abs(gap))/2;
                 p.x-=separation*sign; q.x+=separation*sign;
             }
-            bool fall0 = HoleOpen && Math.Abs(p.x-HoleX)<31 && p.height<12;
-            bool fall1 = HoleOpen && Math.Abs(q.x-HoleX)<31 && q.height<12;
+            bool fall0 = RiftsOpen && OverRift(p.x) && p.height<12;
+            bool fall1 = RiftsOpen && OverRift(q.x) && q.height<12;
             if (fall0 || fall1) {
-                if (fall0) p.health=0; if (fall1) q.health=0;
-                sounds.Add("fall"); Finish(fall0 && fall1 ? -1 : fall0 ? 1 : 0,"MANHOLE RING OUT");
-            } else if (p.health<=0 || q.health<=0) Finish(p.health<=0 && q.health<=0 ? -1 : p.health<=0 ? 1 : 0,"KNOCKOUT");
-            else if (remaining<=0) Finish(Math.Abs(p.health-q.health)<.01f ? -1 : p.health>q.health ? 0 : 1,"TIME UP");
+                p.fallen=fall0; q.fallen=fall1;
+                sounds.Add("fall"); Finish(fall0 && fall1 ? -1 : fall0 ? 1 : 0,"RIFT RING OUT");
+            } else if (remaining<=0) Finish(-1,"TIME UP / NO RING OUT");
         }
         void UpdateFighter(int index, DuelInput input, float dt)
         {
@@ -134,19 +133,17 @@ namespace Hexbound
                 // Eight spell profiles: flame, ice, lunar, thorn, lightning, earth, gravity, blood rune.
                 float[] speed={470,560,380,430,760,320,300,520};
                 float[] force={190,150,260,230,180,390,440,210};
-                float[] damage={14,12,16,14,12,18,15,17};
                 spells.Add(new Spell { owner=index,character=p.character,direction=p.facing,x=p.x+p.facing*45,height=p.height,
-                    speed=speed[p.character],force=force[p.character]*(big?1.7f:1),damage=damage[p.character]*(big?2:1),ultimate=big });
+                    speed=speed[p.character],force=force[p.character]*(big?1.7f:1),ultimate=big });
             } else if (Math.Abs(enemy.x-p.x)<115 && (enemy.x-p.x)*p.facing>=0 && Math.Abs(enemy.height-p.height)<70) {
                 bool push=p.pose==Pose.Push, combo=p.pose==Pose.Combo;
-                Hit(enemy,push ? 0 : combo ? 18 : 7,p.facing*(push ? 760 : combo ? 470 : 180),p.character,combo);
+                Hit(enemy,p.facing*(push ? 760 : combo ? 590 : 320),p.character,combo);
                 p.mana=Math.Min(100,p.mana+7);
             }
         }
-        void Hit(Fighter target,float damage,float force,int character,bool big)
+        void Hit(Fighter target,float force,int character,bool big)
         {
             bool guard=target.blocking;
-            target.health=Math.Max(0,target.health-damage*(guard?.2f:1));
             target.knockback=force*(guard?.35f:1); target.stun=guard?.08f:.22f;
             target.pose=Pose.Hurt; target.attackPending=false; target.actionTime=0;
             bursts.Add(new Burst { character=character,x=target.x,height=target.height,ultimate=big });
@@ -156,7 +153,7 @@ namespace Hexbound
         {
             winner=player; reason=cause;
             if (player>=0) players[player].wins++;
-            foreach (var p in players) { p.attackPending=false; if (p.health<=0) p.pose=Pose.Knockout; }
+            foreach (var p in players) { p.attackPending=false; if (p.fallen) p.pose=Pose.Knockout; }
             sounds.Add("win");
         }
     }

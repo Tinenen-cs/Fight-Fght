@@ -1,36 +1,48 @@
 # Asset guide
 
-All character art is original procedural pixel art. Regenerate it with `python3 Tools/generate_assets.py` (Python 3, standard library only). The generator is deterministic and overwrites generated PNG and WAV files; save hand-painted replacements elsewhere before regeneration.
+The final visual direction uses athletic fighting-game bodies with smaller proportional heads, fitted magical academy uniforms, detailed pixel environments, matching illustrated UI panels and forbidden rune-rift traps. The eight themed names and powers are defined in `Roster.cs`.
 
-## Fighter sheets
+## Character workflow
 
-Each `Assets/Resources/Characters/<Name>/sheet.png` is **256 × 640**, arranged as **4 columns × 10 rows** of **64 × 64** cells. Transparent padding is intentional. Characters face right; the renderer mirrors UVs for left-facing poses. PNG coordinates below start at top-left.
+Each fighter has a separate reference in `Assets/Art/CharacterReferences`. Every action is generated separately as **one four-frame request**, using that reference. Several requests may run concurrently. Full prompts and destinations are recorded in `Docs/animation_sequence_manifest.json`; reference prompts are in `Docs/character_reference_manifest.json`.
 
-| Row | Pose | Playback |
+Source sequences live in `Assets/Art/CharacterSequences/<InternalID>/<Action>.png`, arranged as **2 columns × 2 rows**, with transparent backgrounds. They are stored at 512 × 512. Frame order is top-left, top-right, bottom-left, bottom-right.
+
+`Tools/assemble_sequences.py` assembles ten source actions into `Assets/Resources/Characters/<InternalID>/sheet.png`: **512 × 1280**, **4 columns × 10 rows**, **128 × 128** per frame. It preserves alpha, samples pixels without smoothing, aligns each lower silhouette to pixel 116, and derives matching 64 × 64 portraits. The old short folder IDs remain stable to preserve asset GUIDs; every visible name uses the new academy name.
+
+| Row | Action | Playback |
 | --- | --- | --- |
-| 0 | Idle | Loop |
-| 1 | Walk | Loop |
-| 2 | Punch | One attack cycle |
-| 3 | Hurt | Stun reaction |
-| 4 | Knockout | Fall, then hold final frame |
-| 5 | Combo finisher | One attack cycle with magic sparks |
-| 6 | Special cast | One attack cycle |
-| 7 | Power attack | One attack cycle with aura |
-| 8 | Push | One attack cycle |
-| 9 | Jump | Loop while airborne |
+| 0 | Idle | Breathing guard loop |
+| 1 | Walk | Four stride phases |
+| 2 | Punch | Windup, extension/contact, recovery |
+| 3 | Hurt | Recoil and recovery |
+| 4 | Knockout / fall | Upright to horizontal; used for rift fall |
+| 5 | Combo | Heavy magical melee finisher |
+| 6 | Special | Signature elemental cast |
+| 7 | Power | Enhanced elemental release |
+| 8 | Push | Open-palm shove |
+| 9 | Jump | Takeoff, apex, descent, landing |
 
-The 64 × 64 avatars are independent files. `Roster.cs` defines display names, colors, weapons and power names. Sprite cells are selected directly in `AcademyGame.DrawSprite`; no Sprite Editor slicing or Animator controller is required.
+Run the assembler from the project root after installing Pillow:
 
-Each `Effects/<Name>.png` is **256 × 32**, with eight **32 × 32** cells. They animate on projectiles and impact bursts; power attacks enlarge the visual. Colors and particle motifs distinguish the spells. These are intentionally basic prototype animations; frame-by-frame character polish is a future art task.
+```bash
+python3 -m pip install Pillow
+python3 Tools/assemble_sequences.py
+```
 
-## Arenas
+The script does not paint poses or create tweened frames. Generated frame spacing and costume consistency should still be reviewed during a human playtest.
 
-Three **480 × 270** backgrounds: Witchwood, ObsidianHall, AstralTower. The game scales them to 1280 × 720, draws the animated manhole over the walkway, and overlays combat/UI. Point filtering, no compression and no mipmaps preserve hard pixel edges. The 480-to-1280 scale is fractional, so some pixels can have unequal screen widths; a future 640 × 360 redraw would give exact 2× scaling.
+## Scenes, effects and interface
 
-## Audio
+`Docs/academy_art_manifest.json` records full prompts, original source files and runtime destinations. Run `python3 Tools/import_academy_art.py` to rebuild those runtime assets from committed sources.
 
-Four mono 22,050 Hz, 16-bit WAV loops (Menu + each arena), plus twelve SFX. The generator synthesizes original square/sine wave patterns. Replace files with the same names to preserve `Resources.Load` lookups. Check volume levels with two players before increasing the defaults.
+- Three **640 × 360** academy backgrounds: gate courtyard, grand library and observatory terrace. The runtime displays them on a 1280 × 720 logical canvas with point filtering, creating crisp 2× pixels. No traps are painted into the backgrounds.
+- Eight elemental effect sheets: **512 × 256**, four columns × two rows, eight 128 × 128 frames. They accompany projectiles and impact bursts.
+- `UI/AcademyPanel.png` and `UI/AcademyButton.png`: wood, brass and dark leather skins. The renderer uses nine-slicing to preserve illustrated corners across panel sizes.
+- `Stages/RuneRift.png`: four pulse frames in a 2 × 2 grid. The same opening appears at both stage edges, with its center aligned to the ring-out collision zone. It replaces the iron manhole/lid concept.
 
-## Reserved destinations
+## Audio and legacy generator
 
-`Assets/Animations`, `Assets/Prefabs` and `Assets/Art/UI` are intentional destinations for later production assets. The current prototype draws via Unity IMGUI and does not depend on those folders. Unity `.meta` files must be committed when assets are added or moved.
+`Tools/generate_assets.py` regenerates the four original music loops and twelve sound effects using the Python standard library. It preserves existing final artwork and only fills missing legacy art files. Use the image importers above to rebuild current artwork rather than deleting final assets and asking the legacy generator to replace them.
+
+Commit Unity `.meta` files whenever assets are added or moved. `Assets/Animations`, `Assets/Prefabs` and `Assets/Art/UI` remain available for later Animator/SpriteRenderer/UI prefab migration; this prototype selects sprite cells directly in its runtime renderer.

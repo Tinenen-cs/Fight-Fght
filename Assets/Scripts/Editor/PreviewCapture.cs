@@ -36,10 +36,26 @@ namespace Hexbound.Editor
             if (step==3) game.CapturePreview("Docs/Previews/02-select.png");
             if (step==4) Invoke(game,"StartMatch");
             if (step==7) game.CapturePreview("Docs/Previews/03-fight.png");
-            if (step==8) {
+            if (step==8 || step==11) {
+                var model=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
+                model.players[1].x=DuelModel.RightRiftX;
+                model.Tick(.016f,default(DuelInput),default(DuelInput));
+                if (!model.Finished || model.winner!=0) throw new Exception("Ring-out did not finish arena");
+                model.NextRound(); Invoke(game,"BeginRound");
+            }
+            if (step==10) game.CapturePreview("Docs/Previews/05-library.png");
+            if (step==13) game.CapturePreview("Docs/Previews/06-observatory.png");
+            if (step==14) {
+                var model=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
+                model.players[1].x=DuelModel.RightRiftX;
+                model.Tick(.016f,default(DuelInput),default(DuelInput));
+                if (!model.MatchFinished || model.players[0].wins!=3) throw new Exception("Three ring-out match failed");
+            }
+            if (step==16) game.CapturePreview("Docs/Previews/07-ringout-result.png");
+            if (step==17) {
                 var model=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
                 if (model==null) throw new Exception("No runtime model");
-                Debug.Log("HEXBOUND RUNTIME SMOKE PASSED: title, selection, fight rendered");
+                Debug.Log("HEXBOUND RUNTIME SMOKE PASSED: academy title, selection, all three arenas with both edge traps, and three-ring-out match result");
                 SessionState.SetBool("Hexbound.Capture",false); EditorApplication.update-=Update;
                 EditorApplication.Exit(0);
             }

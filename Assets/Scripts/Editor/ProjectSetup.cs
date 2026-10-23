@@ -65,7 +65,12 @@ namespace Hexbound.Editor
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/sheet")!=null,"sprite "+i);
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/avatar")!=null,"avatar "+i);
                 Require(Resources.Load<Texture2D>("Effects/"+Roster.Files[i])!=null,"effect "+i);
+                var sheet=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/sheet");
+                Require(sheet.width==512 && sheet.height==1280,"128-pixel fighter atlas "+i);
             }
+            Require(Resources.Load<Texture2D>("Stages/RuneRift")!=null,"rune rift");
+            Require(Resources.Load<Texture2D>("UI/AcademyPanel")!=null,"academy panel skin");
+            Require(Resources.Load<Texture2D>("UI/AcademyButton")!=null,"academy button skin");
             Require(Resources.LoadAll<AudioClip>("Audio").Length==16,"16 audio files");
             Debug.Log("HEXBOUND VALIDATION PASSED: rules and imported assets");
         }

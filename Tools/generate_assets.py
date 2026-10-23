@@ -75,10 +75,10 @@ for i,name in enumerate(NAMES):
     sheet=Canvas(256,640)
     for row in range(10):
         for f in range(4): fighter(sheet,i,f*64,row*64,row,f)
-    sheet.save(ROOT/'Characters'/name/'sheet.png')
+    if not (ROOT/'Characters'/name/'sheet.png').exists(): sheet.save(ROOT/'Characters'/name/'sheet.png')
     portrait=Canvas(64,64,(24,24,43,255))
     portrait.disk(32,30,28,tuple(int(v*.3) for v in COLORS[i])); fighter(portrait,i,0,5,0,0)
-    portrait.save(ROOT/'Characters'/name/'avatar.png')
+    if not (ROOT/'Characters'/name/'avatar.png').exists(): portrait.save(ROOT/'Characters'/name/'avatar.png')
     fx=Canvas(256,32)
     for f in range(8):
         for k in range(14):
@@ -89,7 +89,7 @@ for i,name in enumerate(NAMES):
             elif i%3==1: fx.line(x-2,y,x+2,y,COLORS[i]); fx.line(x,y-2,x,y+2,COLORS[i])
             else: fx.disk(x,y,2,COLORS[i])
         fx.disk(f*32+16,16,3,(255,247,215))
-    fx.save(ROOT/'Effects'/(name+'.png'))
+    if not (ROOT/'Effects'/(name+'.png')).exists(): fx.save(ROOT/'Effects'/(name+'.png'))
 
 for stage in range(3):
     rng=random.Random(82+stage); c=Canvas(480,270)
@@ -123,7 +123,8 @@ for stage in range(3):
         for x in range((y%2)*20,480,40): c.rect(x,y,1,13,(64,56,69))
     for x in (37,438):
         c.rect(x,176,5,32,(91,77,91)); c.disk(x+2,173,5,(245,193,107)); c.disk(x+2,172,2,(255,242,199))
-    c.save(ROOT/'Stages'/(['Witchwood','ObsidianHall','AstralTower'][stage]+'.png'))
+    stage_path=ROOT/'Stages'/(['Witchwood','ObsidianHall','AstralTower'][stage]+'.png')
+    if not stage_path.exists(): c.save(stage_path)
 
 def sound(path,notes,duration,volume=.17):
     rate=22050; samples=[]
@@ -139,4 +140,4 @@ for name,notes in {'select':[440,660],'confirm':[440,554,880],'punch':[160,90],'
 for i,name in enumerate(['Menu','Witchwood','ObsidianHall','AstralTower']):
     base=[220,261.63,329.63,293.66,220,196,246.94,164.81]
     sound(ROOT/'Audio'/'Music'/(name+'.wav'),[x*(1+i*.125) for x in base*4],16,.085)
-print('Generated 8 sheets (320 frames), 8 avatars, 8 effect sheets, 3 arenas, and 16 WAV files.')
+print('Ensured artwork exists (existing art preserved); generated 16 WAV files.')

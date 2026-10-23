@@ -1,0 +1,6 @@
+{
+  "tool": "built-in image_gen",
+  "source": "Assets/Art/EnvironmentSources/RuneRift.png",
+  "runtime": "Assets/Resources/Stages/RuneRift.png",
+  "prompt": "One FOUR-FRAME animation sequence for a fantasy academy FLOOR RIFT TRAP game sprite. 2x2 grid exactly, four equal square cells, transparent background. A low flat elliptical opening viewed from side/front at ground level, ancient carved stone and antique brass academy seal rim engraved with tiny ivory and violet arcane runes, deep navy-black magical void in the center, restrained lavender-blue inner vortex and a few rising motes. No manhole iron cover, no sewer details, no displaced lid. Elegant forbidden spell circle, matches richly detailed dark-academia stone courtyard and library fighting stages. Four frames show runes gently pulsing, subtle vortex rotation and motes rising; outer rim shape and placement remain fixed throughout. Each complete elliptical rift fits its square cell, centered, same scale, wide ring about75% of cell width, ellipse height about28% of cell height. Rich artistic PIXEL ART, deliberately crisp pixel clusters, metallic gold and carved stone highlights, no blurry airbrush. No text, labels, grid lines, scenery, characters or interface. This generation contains exactly4frames of ONE rift idle pulse animation, not a whole game atlas."
+}

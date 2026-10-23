@@ -1,0 +1,90 @@
+{
+  "tool": "built-in image_gen",
+  "style": "detailed academy pixel art, athletic fighter proportions",
+  "assets": [
+    {
+      "key": "stage_Witchwood",
+      "source": "Assets/Art/EnvironmentSources/Witchwood.png",
+      "runtime": "Assets/Resources/Stages/Witchwood.png",
+      "prompt": "Asset: richly detailed PIXEL ART side-view fighting-game arena, wide16:9 composition, preferred1280x720. Scene: academy gate courtyard at golden sunset: richly textured red-brown brick university facades on left and right, elaborate wrought-iron gates, ivy and hedges, arched lit classroom windows, stone stairways, bronze lanterns, distant clocktower and magical school spires silhouetted in warm apricot sky; forest visible beyond the gate. Follow the attached city-street reference for high-quality layered pixel architecture, depth, warm sunset lighting, tactile masonry, atmospheric skyline, carefully shaded props and artistically composed environment. Magical dark-academia university setting, academic, inviting yet mysterious, not modern city shops. Entire stage is straight-on side-scrolling view, flat horizontal ground, no isometric camera. Important gameplay alignment: foreground level walking surface at77% of image height, remaining23% foreground below is broad open stone street/pavement. Keep central fighting area free of large foreground obstacles. Both extreme left and right edges of the fighting ground clear for separate manhole traps drawn by the game. No holes painted in the image, no center hole, no characters, no text, no HUD or logos. Highly artistic, deliberate textured pixel clusters, rich palette, no crude geometric placeholders, no blurry painterly gradients."
+    },
+    {
+      "key": "stage_ObsidianHall",
+      "source": "Assets/Art/EnvironmentSources/ObsidianHall.png",
+      "runtime": "Assets/Resources/Stages/ObsidianHall.png",
+      "prompt": "Asset: richly detailed PIXEL ART side-view fighting-game arena, wide16:9 composition, preferred1280x720. Scene: grand academy library dueling hall at dusk: red-brown brick and dark stone walls, tall gothic arched amber stained-glass windows, towering wood bookcases with colored book spines, upper-level iron gallery railings and spiral stairs, scholastic banners, warm lamps, detailed patterned stone pavement and academic architectural depth. Follow the attached city-street reference for high-quality layered pixel architecture, depth, warm sunset lighting, tactile masonry, atmospheric skyline, carefully shaded props and artistically composed environment. Magical dark-academia university setting, academic, inviting yet mysterious, not modern city shops. Entire stage is straight-on side-scrolling view, flat horizontal ground, no isometric camera. Important gameplay alignment: foreground level walking surface at77% of image height, remaining23% foreground below is broad open stone street/pavement. Keep central fighting area free of large foreground obstacles. Both extreme left and right edges of the fighting ground clear for separate manhole traps drawn by the game. No holes painted in the image, no center hole, no characters, no text, no HUD or logos. Highly artistic, deliberate textured pixel clusters, rich palette, no crude geometric placeholders, no blurry painterly gradients."
+    },
+    {
+      "key": "stage_AstralTower",
+      "source": "Assets/Art/EnvironmentSources/AstralTower.png",
+      "runtime": "Assets/Resources/Stages/AstralTower.png",
+      "prompt": "Asset: richly detailed PIXEL ART side-view fighting-game arena, wide16:9 composition, preferred1280x720. Scene: academy observatory rooftop terrace at twilight: red-brick and limestone academic towers at both sides, green copper telescope dome, wrought-iron terrace railing behind fighters, ornate bronze armillary spheres, warm glowing windows, distant layered university rooftops against violet orange sunset and first stars, scholar banners and subtle floating constellation runes. Follow the attached city-street reference for high-quality layered pixel architecture, depth, warm sunset lighting, tactile masonry, atmospheric skyline, carefully shaded props and artistically composed environment. Magical dark-academia university setting, academic, inviting yet mysterious, not modern city shops. Entire stage is straight-on side-scrolling view, flat horizontal ground, no isometric camera. Important gameplay alignment: foreground level walking surface at77% of image height, remaining23% foreground below is broad open stone street/pavement. Keep central fighting area free of large foreground obstacles. Both extreme left and right edges of the fighting ground clear for separate manhole traps drawn by the game. No holes painted in the image, no center hole, no characters, no text, no HUD or logos. Highly artistic, deliberate textured pixel clusters, rich palette, no crude geometric placeholders, no blurry painterly gradients."
+    },
+    {
+      "key": "ui_panel",
+      "source": "Assets/Art/InterfaceSources/panel.png",
+      "runtime": "Assets/Resources/UI/AcademyPanel.png",
+      "prompt": "Game interface asset, one wide rectangular dark-academia panel on transparent background,512x256, straight-on. Richly detailed fantasy PIXEL ART. Ornate but restrained carved dark walnut frame, antiqued brass corner fittings, tiny engraved stars and ivy scrollwork, thin ivory parchment inner border, deep midnight-blue leather central surface perfectly plain and dark for readable game text. Rectangular functional border with clean square corners suitable for nine-slice UI. Center is 85% empty. No text, no letters, no symbols occupying center, no other objects, no drop shadow outside panel. Match a magical university's book covers and brass library fittings. Artful shaded pixel clusters, warm metals, navy and dark wood, polished academy game UI."
+    },
+    {
+      "key": "ui_button",
+      "source": "Assets/Art/InterfaceSources/button.png",
+      "runtime": "Assets/Resources/UI/AcademyButton.png",
+      "prompt": "One horizontal rectangular clickable game button, transparent background outside,512x96. Rich fantasy PIXEL ART dark-academia style, sculpted dark walnut edges and antique brass trim with small engraved diamond corners, muted burgundy leather center blank for a label, warm highlight on upper edge, elegant academic spellbook interface. Square corners suitable for nine-slice. No text, no lettering, no logo, no giant emblem. Entire blank center available for readable button caption. Crisp detailed pixel clusters, artistic shaded materials, same magical university palette of dark wood brass burgundy ivory."
+    },
+    {
+      "key": "effect_Lyra",
+      "source": "Assets/Art/EffectSources/Lyra.png",
+      "runtime": "Assets/Resources/Effects/Lyra.png",
+      "prompt": "Game VFX animation atlas, richly detailed artistic fantasy PIXEL ART for magical academy combat, ember orange and gold fire, curling phoenix flame. Transparent background, no character, no weapon, no background. EXACT4columns2rows of equal square cells,8 distinct sequential animation frames top-left to bottom-right, beginning small spark, developing magical burst, broad flowing peak, then fading particles. Effects centered in every cell with transparent margins, no clipping or overlaps. Preferred512x256 total,128square cells. Crisp shaded square pixel clusters, detailed vibrant energetic silhouettes and luminous core, no soft airbrush blur. Visible light and dark pixel shading. Only the magical effect, no text, no labels, no grid, no interface."
+    },
+    {
+      "key": "effect_Mira",
+      "source": "Assets/Art/EffectSources/Mira.png",
+      "runtime": "Assets/Resources/Effects/Mira.png",
+      "prompt": "Game VFX animation atlas, richly detailed artistic fantasy PIXEL ART for magical academy combat, icy cyan and silver frost, crystalline shards. Transparent background, no character, no weapon, no background. EXACT4columns2rows of equal square cells,8 distinct sequential animation frames top-left to bottom-right, beginning small spark, developing magical burst, broad flowing peak, then fading particles. Effects centered in every cell with transparent margins, no clipping or overlaps. Preferred512x256 total,128square cells. Crisp shaded square pixel clusters, detailed vibrant energetic silhouettes and luminous core, no soft airbrush blur. Visible light and dark pixel shading. Only the magical effect, no text, no labels, no grid, no interface."
+    },
+    {
+      "key": "effect_Selene",
+      "source": "Assets/Art/EffectSources/Selene.png",
+      "runtime": "Assets/Resources/Effects/Selene.png",
+      "prompt": "Game VFX animation atlas, richly detailed artistic fantasy PIXEL ART for magical academy combat, lavender and ivory moonlight, crescent arcs and stars. Transparent background, no character, no weapon, no background. EXACT4columns2rows of equal square cells,8 distinct sequential animation frames top-left to bottom-right, beginning small spark, developing magical burst, broad flowing peak, then fading particles. Effects centered in every cell with transparent margins, no clipping or overlaps. Preferred512x256 total,128square cells. Crisp shaded square pixel clusters, detailed vibrant energetic silhouettes and luminous core, no soft airbrush blur. Visible light and dark pixel shading. Only the magical effect, no text, no labels, no grid, no interface."
+    },
+    {
+      "key": "effect_Iris",
+      "source": "Assets/Art/EffectSources/Iris.png",
+      "runtime": "Assets/Resources/Effects/Iris.png",
+      "prompt": "Game VFX animation atlas, richly detailed artistic fantasy PIXEL ART for magical academy combat, emerald and lime nature magic, twisting thorn vines and leaves. Transparent background, no character, no weapon, no background. EXACT4columns2rows of equal square cells,8 distinct sequential animation frames top-left to bottom-right, beginning small spark, developing magical burst, broad flowing peak, then fading particles. Effects centered in every cell with transparent margins, no clipping or overlaps. Preferred512x256 total,128square cells. Crisp shaded square pixel clusters, detailed vibrant energetic silhouettes and luminous core, no soft airbrush blur. Visible light and dark pixel shading. Only the magical effect, no text, no labels, no grid, no interface."
+    },
+    {
+      "key": "effect_Alden",
+      "source": "Assets/Art/EffectSources/Alden.png",
+      "runtime": "Assets/Resources/Effects/Alden.png",
+      "prompt": "Game VFX animation atlas, richly detailed artistic fantasy PIXEL ART for magical academy combat, gold and ivory lightning, branching electric bolts. Transparent background, no character, no weapon, no background. EXACT4columns2rows of equal square cells,8 distinct sequential animation frames top-left to bottom-right, beginning small spark, developing magical burst, broad flowing peak, then fading particles. Effects centered in every cell with transparent margins, no clipping or overlaps. Preferred512x256 total,128square cells. Crisp shaded square pixel clusters, detailed vibrant energetic silhouettes and luminous core, no soft airbrush blur. Visible light and dark pixel shading. Only the magical effect, no text, no labels, no grid, no interface."
+    },
+    {
+      "key": "effect_Rowan",
+      "source": "Assets/Art/EffectSources/Rowan.png",
+      "runtime": "Assets/Resources/Effects/Rowan.png",
+      "prompt": "Game VFX animation atlas, richly detailed artistic fantasy PIXEL ART for magical academy combat, turquoise and bronze earth magic, glowing stone fragments. Transparent background, no character, no weapon, no background. EXACT4columns2rows of equal square cells,8 distinct sequential animation frames top-left to bottom-right, beginning small spark, developing magical burst, broad flowing peak, then fading particles. Effects centered in every cell with transparent margins, no clipping or overlaps. Preferred512x256 total,128square cells. Crisp shaded square pixel clusters, detailed vibrant energetic silhouettes and luminous core, no soft airbrush blur. Visible light and dark pixel shading. Only the magical effect, no text, no labels, no grid, no interface."
+    },
+    {
+      "key": "effect_Orion",
+      "source": "Assets/Art/EffectSources/Orion.png",
+      "runtime": "Assets/Resources/Effects/Orion.png",
+      "prompt": "Game VFX animation atlas, richly detailed artistic fantasy PIXEL ART for magical academy combat, indigo and cyan gravity, swirling cosmic rings. Transparent background, no character, no weapon, no background. EXACT4columns2rows of equal square cells,8 distinct sequential animation frames top-left to bottom-right, beginning small spark, developing magical burst, broad flowing peak, then fading particles. Effects centered in every cell with transparent margins, no clipping or overlaps. Preferred512x256 total,128square cells. Crisp shaded square pixel clusters, detailed vibrant energetic silhouettes and luminous core, no soft airbrush blur. Visible light and dark pixel shading. Only the magical effect, no text, no labels, no grid, no interface."
+    },
+    {
+      "key": "effect_Dorian",
+      "source": "Assets/Art/EffectSources/Dorian.png",
+      "runtime": "Assets/Resources/Effects/Dorian.png",
+      "prompt": "Game VFX animation atlas, richly detailed artistic fantasy PIXEL ART for magical academy combat, magenta and burgundy rune magic, arcane circular sigils. Transparent background, no character, no weapon, no background. EXACT4columns2rows of equal square cells,8 distinct sequential animation frames top-left to bottom-right, beginning small spark, developing magical burst, broad flowing peak, then fading particles. Effects centered in every cell with transparent margins, no clipping or overlaps. Preferred512x256 total,128square cells. Crisp shaded square pixel clusters, detailed vibrant energetic silhouettes and luminous core, no soft airbrush blur. Visible light and dark pixel shading. Only the magical effect, no text, no labels, no grid, no interface."
+    },
+    {
+      "key": "trap_RuneRift",
+      "source": "Assets/Art/EnvironmentSources/RuneRift.png",
+      "runtime": "Assets/Resources/Stages/RuneRift.png",
+      "prompt": "One FOUR-FRAME animation sequence for a fantasy academy FLOOR RIFT TRAP game sprite. 2x2 grid exactly, four equal square cells, transparent background. A low flat elliptical opening viewed from side/front at ground level, ancient carved stone and antique brass academy seal rim engraved with tiny ivory and violet arcane runes, deep navy-black magical void in the center, restrained lavender-blue inner vortex and a few rising motes. No manhole iron cover, no sewer details, no displaced lid. Elegant forbidden spell circle, matches richly detailed dark-academia stone courtyard and library fighting stages. Four frames show runes gently pulsing, subtle vortex rotation and motes rising; outer rim shape and placement remain fixed throughout. Each complete elliptical rift fits its square cell, centered, same scale, wide ring about75% of cell width, ellipse height about28% of cell height. Rich artistic PIXEL ART, deliberately crisp pixel clusters, metallic gold and carved stone highlights, no blurry airbrush. No text, labels, grid lines, scenery, characters or interface. This generation contains exactly4frames of ONE rift idle pulse animation, not a whole game atlas."
+    }
+  ]
+}

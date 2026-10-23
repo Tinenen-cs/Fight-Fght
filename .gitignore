@@ -16,3 +16,7 @@ Recordings/
 *.user
 *.log
 .env
+
+__pycache__/
+*.pyc
+.venv/

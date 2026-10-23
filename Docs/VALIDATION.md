@@ -1,6 +1,6 @@
 # Validation record
 
-Date: **23 October 2026**, macOS. This is a student prototype with procedural pixel art and synthesized audio.
+Date: **23 October 2026**, macOS. This is a student prototype with generated academy pixel art and synthesized audio.
 
 The project is pinned to **6000.2.2f1**, as selected by the user for this Mac.
 
@@ -8,18 +8,24 @@ The project is pinned to **6000.2.2f1**, as selected by the user for this Mac.
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| Pure C# combat rules | **27 assertions passed** | `Tools/test_rules.sh`, using installed Unity Mono |
+| Pure C# combat rules | **53 assertions passed** | `Tools/test_rules.sh`, using installed Unity Mono |
 | Unity compile and asset import | **Passed** on **6000.2.2f1** | Batch entry point `Hexbound.Editor.ProjectSetup.ValidateBatch` |
 | Character assets | Eight sheets, eight avatars and eight effect sheets loaded | Unity batch validation |
 | Audio import | All 16 WAV assets loaded | Unity batch validation |
 | Runtime title / selection / fight | **Passed** on **6000.2.2f1** | `Hexbound.Editor.PreviewCapture.Start`, rendered Game view screenshots below |
 | Rendered UI inspection | Complete title, both selection panels, eight cards, mirrored HUD and arena visible | Screenshots inspected after capture |
 
-The rule assertions cover the 99-second timer, single-hit melee, attack range, guard reduction, damage-free shove, arcana requirements, power cost, jumping/no double jump, ground/air manhole behavior, score counted once, round reset, timeout winner, three-round draws/limit, a three-strike combo, and hits from all eight fighter spell profiles.
+The current rule assertions verify that no health pool exists, punches and combos apply knockback, guarding reduces force, all eight fighters can ring out an opponent with both spells and power attacks, melee and shoves can ring out, all three arenas have both edge traps and a safe center, jumps clear the trap, P2 can push left into it, score is awarded once, and timeouts are draws. They also cover arcana costs, cooldown contact, jumping, round reset and the three-round limit.
 
 The first scene-creation attempt failed because Unity does not allow adding a scene beside an unsaved untitled scene. Setup now handles a clean untitled scene and preserves dirty work by asking the user to save it. The subsequent batch validation passed.
 
 An initial screen-desktop capture produced cropped images because of display scaling. The capture tool now reads the actual rendered Game frame; the committed previews show the whole game view. No desktop captures are included.
+
+## Academy artwork update
+
+Each of eight athletic academy fighters has a separate reference image. The replacement actions are generated one four-frame sequence at a time, with multiple requests running concurrently. Ten actions per fighter produce 80 source sequences and 320 runtime frames. The final assembler preserves transparency, uses nearest-neighbor sampling and aligns the lower silhouette to a consistent baseline. Detailed backgrounds remain visibly pixelated at 640 × 360. Source images and full prompts are saved in the repository. Final assembly and Unity 6000.2.2f1 import validation passed. The rendered title, selection, all three arenas with two edge rifts, and a three-ring-out match result passed the graphical smoke check. All 80 sequences (320 nonempty frames) and eight matching portraits were saved.
+
+![Eight academy fighters](Previews/04-roster.png)
 
 ## Runtime previews
 
@@ -27,7 +33,13 @@ An initial screen-desktop capture produced cropped images because of display sca
 
 ![Character selection](Previews/02-select.png)
 
-![Fight HUD and Witchwood arena](Previews/03-fight.png)
+![Fight HUD and academy gates](Previews/03-fight.png)
+
+![Grand library with edge rifts](Previews/05-library.png)
+
+![Observatory terrace with edge rifts](Previews/06-observatory.png)
+
+![Three-round ring-out match result](Previews/07-ringout-result.png)
 
 ## Still to verify
 
@@ -36,7 +48,7 @@ An initial screen-desktop capture produced cropped images because of display sca
 - A complete human playthrough of all three arenas and several fighter pairings; automated rule checks verify outcomes but do not judge combat feel.
 - Other operating systems, standalone builds, controllers, and mobile/touch behavior.
 
-The graphical smoke pass opens the title, selection and a fight automatically. It checks runtime rendering and model creation; it is not a substitute for manually pressing every input or playing a match.
+The graphical smoke pass opens the title, selection and all three arenas automatically, then forces one ring-out in each arena and checks the three-win match result. It checks runtime rendering, edge-trap outcomes and match flow; it is not a substitute for manually pressing every input or playing a match.
 
 ## Run checks again
 
