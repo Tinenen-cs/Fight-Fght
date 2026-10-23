@@ -73,3 +73,17 @@ Optional graphical smoke pass, with the project closed in other Unity processes:
 ```
 
 This opens Unity, enters Play mode, updates `Docs/Previews`, then **closes that Unity process automatically**. It requires a graphical desktop session. Normal gameplay uses **Assets/Scenes/Main.unity → Play**, with no automated exit.
+
+## Repository delivery
+
+The complete prototype is committed locally. The first upload attempt to
+`https://github.com/Tinenen-cs/Fight-Fght.git` failed because Git could not obtain
+a GitHub username/credential in this session. No remote update was made.
+After signing in to GitHub on this Mac, publish the existing commits with:
+
+```bash
+git push -u origin main
+```
+
+No force push is needed. Local work and validation remain available without
+a GitHub connection.

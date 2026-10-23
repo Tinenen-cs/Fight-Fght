@@ -8,7 +8,7 @@ The supplied fighting-game screenshots inspire the **UI arrangement only**: oppo
 
 ## Download & play
 
-Source: **[Tinenen-cs/Fight-Fght](https://github.com/Tinenen-cs/Fight-Fght)**. Open the project in Unity to test. No standalone application, mobile package, or online multiplayer service is included.
+Repository: **[Tinenen-cs/Fight-Fght](https://github.com/Tinenen-cs/Fight-Fght)**. The first prototype is committed locally; upload is pending GitHub sign-in on this Mac. Open the local project in Unity to test. No standalone application, mobile package, or online multiplayer service is included.
 
 | Device | Output | Status |
 | --- | --- | --- |

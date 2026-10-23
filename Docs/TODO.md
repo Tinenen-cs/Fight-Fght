@@ -36,7 +36,8 @@ Updated: 23 October 2026. Checked boxes mean implemented or specifically verifie
 - [x] Run 27 pure C# combat assertions.
 - [x] Unity 6000.2.2f1 compilation and asset-import validation on this Mac.
 - [x] Finish visual runtime smoke test and record result (Unity 6000.2.2f1; full Game view previews included).
-- [ ] Commit and upload initial game to origin/main.
+- [x] Commit initial game locally (`f1e0543`).
+- [ ] Upload to origin/main — blocked: this Mac has no GitHub HTTPS credentials. `git push -u origin main` failed with `could not read Username`; sign in to GitHub, then retry.
 - [ ] Install/select requested Unity 6000.3.27f1 and repeat playtest.
 - [ ] Two-person keyboard test: movement, simultaneous input, combo timing, guards and jumps.
 - [ ] Auditory check of music loops and every sound cue through Mac output.
