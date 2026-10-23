@@ -46,3 +46,9 @@ The script does not paint poses or create tweened frames. Generated frame spacin
 `Tools/generate_assets.py` regenerates the four original music loops and twelve sound effects using the Python standard library. It preserves existing final artwork and only fills missing legacy art files. Use the image importers above to rebuild current artwork rather than deleting final assets and asking the legacy generator to replace them.
 
 Commit Unity `.meta` files whenever assets are added or moved. `Assets/Animations`, `Assets/Prefabs` and `Assets/Art/UI` remain available for later Animator/SpriteRenderer/UI prefab migration; this prototype selects sprite cells directly in its runtime renderer.
+
+## Authored portrait reactions and selection art
+
+`Assets/Art/PortraitSources/<fighter>.png` is one separately generated four-frame 2×2 head sheet per fighter. Reading order is focused, hurt, dazed, victorious. `Tools/import_portraits.py` fits full heads with padding into 128px cells and creates a 256×256 runtime `portraits.png`, plus the neutral `avatar.png`. The HUD chooses the current reaction; roster cards use the neutral head. `assemble_sequences.py` preserves authored portraits instead of replacing them with body crops.
+
+`showcase.png` is a 512px nearest-neighbor copy of each original character reference for large opposing selection previews. These are independent of the battle animation atlases. `Docs/portrait_art_manifest.json` and `Docs/lighting_art_manifest.json` record built-in image-tool prompts and committed source destinations.

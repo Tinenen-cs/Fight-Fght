@@ -11,7 +11,9 @@ namespace Hexbound
     }
     public sealed class Fighter
     {
-        public int character, wins, combo, facing;
+        public int character, wins, combo, facing, hitsTowardKnockdown;
+        public float knockdownTime, knockdownElapsed;
+        public bool IsKnockedDown => knockdownTime>0;
         public float x, height, verticalSpeed, knockback, mana = 35;
         public float actionTime, actionLength, stun, comboWindow, stepClock;
         public bool blocking, attackPending, fallen;
@@ -45,7 +47,9 @@ namespace Hexbound
         public bool RiftsOpen => true;
         public const float LeftRiftX=100, RightRiftX=1180;
         public static bool OverRift(float x) => Math.Abs(x-LeftRiftX)<36 || Math.Abs(x-RightRiftX)<36;
-        public DuelModel(int p1, int p2) { players = new[] { new Fighter(p1, 410, 1), new Fighter(p2, 870, -1) }; }
+        readonly int startingArena;
+        public int ArenaIndex => (startingArena+round-1)%3;
+        public DuelModel(int p1, int p2, int arena=0) { startingArena=Math.Max(0,Math.Min(2,arena)); players = new[] { new Fighter(p1, 410, 1), new Fighter(p2, 870, -1) }; }
         public void NextRound()
         {
             if (!Finished || round >= 3) return;
@@ -96,6 +100,12 @@ namespace Hexbound
                 p.height+=p.verticalSpeed*dt; p.verticalSpeed-=1100*dt;
                 if (p.height<=0) { p.height=0; p.verticalSpeed=0; sounds.Add("step"); }
             }
+            if(p.IsKnockedDown) {
+                p.knockdownElapsed+=dt; p.knockdownTime=Math.Max(0,p.knockdownTime-dt);
+                p.blocking=false; p.attackPending=false; p.actionTime=0; p.combo=0; p.comboWindow=0;
+                p.pose=p.IsKnockedDown?Pose.Knockout:Pose.Idle;
+                p.x=Math.Max(65,Math.Min(1215,p.x)); return;
+            }
             p.blocking=input.block && p.height==0 && p.stun==0 && p.actionTime<=0;
             if (p.actionTime>0) { p.actionTime=Math.Max(0,p.actionTime-dt); }
             if (p.stun>0) p.pose=Pose.Hurt;
@@ -125,7 +135,7 @@ namespace Hexbound
         void ResolveAttack(int index)
         {
             var p=players[index]; var enemy=players[1-index];
-            if (p.stun>0) { p.attackPending=false; return; }
+            if (p.stun>0 || p.IsKnockedDown) { p.attackPending=false; return; }
             if (!p.attackPending || p.actionTime>p.actionLength*.55f) return;
             p.attackPending=false;
             if (p.pose==Pose.Special || p.pose==Pose.Power) {
@@ -145,7 +155,11 @@ namespace Hexbound
         {
             bool guard=target.blocking;
             target.knockback=force*(guard?.35f:1); target.stun=guard?.08f:.22f;
-            target.pose=Pose.Hurt; target.attackPending=false; target.actionTime=0;
+            target.attackPending=false; target.actionTime=0;
+            if(!guard && !target.IsKnockedDown && ++target.hitsTowardKnockdown>=4) {
+                target.hitsTowardKnockdown=0; target.knockdownTime=1.4f; target.knockdownElapsed=0; target.blocking=false;
+            }
+            target.pose=target.IsKnockedDown?Pose.Knockout:Pose.Hurt;
             bursts.Add(new Burst { character=character,x=target.x,height=target.height,ultimate=big });
             sounds.Add(guard ? "block" : "hit");
         }

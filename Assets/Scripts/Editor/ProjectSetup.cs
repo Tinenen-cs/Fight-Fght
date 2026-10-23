@@ -20,7 +20,18 @@ namespace Hexbound.Editor
     [InitializeOnLoad]
     public static class ProjectSetup
     {
-        static ProjectSetup() { EditorApplication.delayCall+=EnsureScene; }
+        static ProjectSetup() { EditorApplication.delayCall+=OpenStartupScene; }
+        static void OpenStartupScene()
+        {
+            EnsureScene();
+            if (Application.isBatchMode || EditorApplication.isPlayingOrWillChangePlaymode) return;
+            if (SessionState.GetBool("Hexbound.StartupOpened",false)) return;
+            SessionState.SetBool("Hexbound.StartupOpened",true);
+            var active=SceneManager.GetActiveScene();
+            if (SceneManager.sceneCount==1 && !active.isDirty && string.IsNullOrEmpty(active.path))
+                EditorSceneManager.OpenScene("Assets/Scenes/Main.unity");
+            if (SceneManager.GetActiveScene().path=="Assets/Scenes/Main.unity") ScenePreviewBuilder.FocusGame();
+        }
         static void EnsureScene()
         {
             if (!File.Exists("Assets/Scenes/Main.unity")) CreateScene();
@@ -29,7 +40,7 @@ namespace Hexbound.Editor
         public static void OpenScene()
         {
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
-            EnsureScene(); EditorSceneManager.OpenScene("Assets/Scenes/Main.unity");
+            EnsureScene(); EditorSceneManager.OpenScene("Assets/Scenes/Main.unity"); ScenePreviewBuilder.FocusGame();
         }
         public static void CreateScene()
         {
@@ -64,6 +75,8 @@ namespace Hexbound.Editor
             for (int i=0;i<8;i++) {
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/sheet")!=null,"sprite "+i);
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/avatar")!=null,"avatar "+i);
+                Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/portraits")!=null,"head reactions "+i);
+                Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/showcase")!=null,"selection showcase "+i);
                 Require(Resources.Load<Texture2D>("Effects/"+Roster.Files[i])!=null,"effect "+i);
                 var sheet=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/sheet");
                 Require(sheet.width==512 && sheet.height==1280,"128-pixel fighter atlas "+i);

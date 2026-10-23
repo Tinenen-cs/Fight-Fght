@@ -11,6 +11,7 @@ namespace Hexbound
         public static readonly string[] Weapons={"Ember wand","Glacier blade","Lunar staff","Thorn rapier","Storm hammer","Oak spear","Gravity orb","Runic scythe"};
         public static readonly Color[] Colors={new Color32(255,108,64,255),new Color32(101,224,255,255),new Color32(185,140,255,255),new Color32(121,235,151,255),new Color32(255,211,93,255),new Color32(97,207,175,255),new Color32(108,151,255,255),new Color32(242,126,190,255)};
         public static readonly string[] Stages={"WITCHWOOD ACADEMY GATES","OBSIDIAN LIBRARY","ASTRAL OBSERVATORY"};
+        public static readonly string[] LightModes={"MORNING","AFTERNOON","NIGHT"};
         public static readonly string[] StageFiles={"Witchwood","ObsidianHall","AstralTower"};
     }
 }

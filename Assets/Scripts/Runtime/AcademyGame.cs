@@ -5,10 +5,12 @@ namespace Hexbound
 {
     public sealed class AcademyGame : MonoBehaviour
     {
-        enum ScreenState { Title, Select, Fight }
+        enum ScreenState { Title, Select, StageSelect, Fight }
         ScreenState screen;
         readonly int[] selected={0,4};
         readonly bool[] ready={false,false};
+        Texture2D[] portraits=new Texture2D[8], showcases=new Texture2D[8];
+        int selectedArena;
         Texture2D[] sheets=new Texture2D[8], avatars=new Texture2D[8], effects=new Texture2D[8], stages=new Texture2D[3];
         readonly Dictionary<string,AudioClip> clips=new Dictionary<string,AudioClip>();
         Texture2D riftSheet, academyPanel, academyButton;
@@ -17,7 +19,7 @@ namespace Hexbound
         float countdown, resultTime, animationTime;
         bool paused, help, muted;
         int lastSecond;
-        Font font;
+        Font font, titleFont;
         GUIStyle textStyle;
         readonly Color ink=new Color32(13,16,30,255), cream=new Color32(242,227,201,255), gold=new Color32(211,176,109,255);
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -28,10 +30,12 @@ namespace Hexbound
             riftSheet=Resources.Load<Texture2D>("Stages/RuneRift");
             academyPanel=Resources.Load<Texture2D>("UI/AcademyPanel");
             academyButton=Resources.Load<Texture2D>("UI/AcademyButton");
-            font=Resources.Load<Font>("UI/Tiny5");
+            font=Resources.Load<Font>("UI/Tiny5"); titleFont=Resources.Load<Font>("UI/CinzelDecorative");
             for (int i=0;i<8;i++) {
                 sheets[i]=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/sheet");
                 avatars[i]=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/avatar");
+                portraits[i]=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/portraits");
+                showcases[i]=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/showcase");
                 effects[i]=Resources.Load<Texture2D>("Effects/"+Roster.Files[i]);
             }
             for (int i=0;i<3;i++) stages[i]=Resources.Load<Texture2D>("Stages/"+Roster.StageFiles[i]);
@@ -47,16 +51,23 @@ namespace Hexbound
         bool Key(KeyCode code) => Input.GetKeyDown(code);
         void Update()
         {
+            if (screen==ScreenState.Title) { animationTime+=Time.deltaTime; if (Input.anyKeyDown) OpenSelect(); return; }
             if (Key(KeyCode.M)) { muted=!muted; AudioListener.volume=muted?0:1; PlayerPrefs.SetInt("Hexbound.Mute",muted?1:0); }
             if (Key(KeyCode.H)) help=!help;
             if (Key(KeyCode.Escape) && screen==ScreenState.Fight && !model.Finished) paused=!paused;
             if (!paused) animationTime+=Time.deltaTime;
-            if (screen==ScreenState.Title) { if (Key(KeyCode.Return)) OpenSelect(); return; }
+            if (screen==ScreenState.StageSelect) {
+                if (Key(KeyCode.A)||Key(KeyCode.LeftArrow)) { selectedArena=(selectedArena+2)%3; Sound("select"); }
+                if (Key(KeyCode.D)||Key(KeyCode.RightArrow)) { selectedArena=(selectedArena+1)%3; Sound("select"); }
+                if (Key(KeyCode.Return)) StartMatch();
+                else if (Key(KeyCode.Escape)) OpenSelect();
+                return;
+            }
             if (screen==ScreenState.Select) {
                 SelectKeys(0,KeyCode.A,KeyCode.D,KeyCode.W,KeyCode.S,KeyCode.F);
                 SelectKeys(1,KeyCode.LeftArrow,KeyCode.RightArrow,KeyCode.UpArrow,KeyCode.DownArrow,KeyCode.J);
                 if (Key(KeyCode.Escape)) { ready[0]=ready[1]=false; Sound("select"); }
-                if (ready[0] && ready[1]) StartMatch();
+                if (ready[0] && ready[1]) OpenStageSelect();
                 return;
             }
             if (paused) return;
@@ -100,8 +111,9 @@ namespace Hexbound
             };
         }
         void OpenSelect() { screen=ScreenState.Select; ready[0]=ready[1]=false; paused=false; help=false; PlayMusic("Menu"); Sound("confirm"); }
-        void StartMatch() { model=new DuelModel(selected[0],selected[1]); screen=ScreenState.Fight; help=false; BeginRound(); }
-        void BeginRound() { countdown=3; lastSecond=3; resultTime=0; Sound("bell"); PlayMusic(Roster.StageFiles[model.round-1]); }
+        void OpenStageSelect() { screen=ScreenState.StageSelect; help=false; Sound("confirm"); }
+        void StartMatch() { model=new DuelModel(selected[0],selected[1],selectedArena); screen=ScreenState.Fight; help=false; BeginRound(); }
+        void BeginRound() { countdown=3; lastSecond=3; resultTime=0; Sound("bell"); PlayMusic(Roster.StageFiles[model.ArenaIndex]); }
         void OnGUI()
         {
             float scale=Mathf.Min(Screen.width/1280f,Screen.height/720f);
@@ -111,8 +123,9 @@ namespace Hexbound
             Box(0,0,1280,720,ink);
             if (screen==ScreenState.Title) DrawTitle();
             else if (screen==ScreenState.Select) DrawSelect();
+            else if (screen==ScreenState.StageSelect) DrawStageSelect();
             else DrawFight();
-            Label(30,690,800,22,"H  CONTROLS     M  "+(muted?"SOUND OFF":"SOUND ON")+"     LOCAL TWO-PLAYER",16,new Color(.62f,.63f,.71f));
+            if (screen!=ScreenState.Title) Label(30,690,800,22,"H  CONTROLS     M  "+(muted?"SOUND OFF":"SOUND ON")+"     LOCAL TWO-PLAYER",16,new Color(.62f,.63f,.71f));
             if (help) DrawHelp();
         }
         void Box(float x,float y,float w,float h,Color color)
@@ -149,56 +162,86 @@ namespace Hexbound
         }
         void DrawTitle()
         {
-            Picture(stages[0],new Rect(0,0,1280,720)); Box(0,0,1280,720,new Color(.025f,.035f,.075f,.32f));
-            Frame(325,66,630,363);
-            Label(0,72,1280,30,"A DUEL AT THE EDGE OF THE FORBIDDEN",20,gold,TextAnchor.MiddleCenter);
-            Label(0,132,1280,105,"HEXBOUND",104,cream,TextAnchor.MiddleCenter);
-            Label(0,239,1280,55,"A C A D E M Y   D U E L",30,gold,TextAnchor.MiddleCenter);
-            Box(465,315,350,2,gold);
-            Label(330,345,620,74,"Eight apprentices. Three forbidden arenas.\nTwo edge traps. One academy champion.",24,cream,TextAnchor.MiddleCenter);
-            for (int i=0;i<8;i++) DrawSprite(i,Pose.Idle,Mathf.FloorToInt(animationTime*6)%4,new Rect(280+i*90,439,90,90),i<4?1:-1);
-            if (Button(465,555,350,58,"ENTER THE ACADEMY  /  ENTER")) OpenSelect();
-            Label(0,627,1280,30,"2 PLAYERS  /  SHARED KEYBOARD  /  99 SECONDS",18,gold,TextAnchor.MiddleCenter);
+            Picture(stages[2],new Rect(0,0,1280,720)); Box(0,0,1280,720,new Color(.015f,.02f,.055f,.78f));
+            Label(0,175,1280,35,"T H E   F O R B I D D E N   T R I A L S",20,gold,TextAnchor.MiddleCenter);
+            textStyle.font=titleFont!=null?titleFont:font;
+            Label(0,230,1280,120,"HEXBOUND",96,cream,TextAnchor.MiddleCenter);
+            Label(0,350,1280,52,"ACADEMY DUEL",29,gold,TextAnchor.MiddleCenter);
+            textStyle.font=font;
+            Box(490,428,300,1,gold);
+            Label(0,488,1280,40,"PRESS ANY KEY OR CLICK TO BEGIN",25,new Color(1,.9f,.7f,.7f+.3f*Mathf.Sin(animationTime*2)),TextAnchor.MiddleCenter);
+            Label(0,648,1280,28,"TWO DUELISTS  /  THREE FORBIDDEN ARENAS  /  ONE ACADEMY",17,gold,TextAnchor.MiddleCenter);
         }
         void DrawSelect()
         {
-            Picture(stages[1],new Rect(0,0,1280,720)); Box(0,0,1280,720,new Color(.025f,.035f,.075f,.43f));
-            Label(40,24,400,26,"HEXBOUND / THE DUELING SOCIETY",18,gold);
-            Label(0,60,1280,66,"CHOOSE YOUR APPRENTICE",46,cream,TextAnchor.MiddleCenter);
-            Label(0,129,1280,25,"FOUR WITCHES  /  FOUR WIZARDS  /  EIGHT FORBIDDEN ARTS",18,gold,TextAnchor.MiddleCenter);
-            SelectPanel(0,35); SelectPanel(1,945);
-            Frame(576,209,128,62);
-            Label(590,215,100,48,"VS",40,gold,TextAnchor.MiddleCenter);
+            Picture(stages[2],new Rect(0,0,1280,720)); Box(0,0,1280,720,new Color(.02f,.02f,.06f,.68f));
+            // Large opposing portraits and compact central roster follow the reference composition.
+            Box(0,0,625,720,new Color(.38f,.06f,.12f,.23f));
+            Box(655,0,625,720,new Color(.04f,.16f,.4f,.23f));
+            SelectPanel(0,30); SelectPanel(1,930);
+            Box(637,118,2,270,new Color(.7f,.6f,.4f,.35f));
+            Label(0,24,1280,28,"HEXBOUND / THE DUELING SOCIETY",18,gold,TextAnchor.MiddleCenter);
+            textStyle.font=titleFont!=null?titleFont:font;
+            Label(0,60,1280,55,"Choose your apprentice",30,cream,TextAnchor.MiddleCenter);
+            textStyle.font=font;
+            Label(555,246,170,65,"VS",52,gold,TextAnchor.MiddleCenter);
+            Frame(396,444,488,202);
             for (int i=0;i<8;i++) {
-                float x=355+(i%4)*145, y=325+(i/4)*143;
-                Color border=selected[0]==i?new Color(.35f,.8f,1):selected[1]==i?new Color(1,.4f,.55f):new Color(.25f,.26f,.36f);
-                Frame(x,y,135,133); Box(x+7,y+3,121,2,border);
-                Picture(avatars[i],new Rect(x+27,y+5,80,80));
-                Label(x,y+84,135,23,Roster.ShortNames[i],20,cream,TextAnchor.MiddleCenter);
-                string tags=(selected[0]==i?"P1 ":"")+(selected[1]==i?"P2":"");
-                Label(x,y+108,135,20,tags,16,border,TextAnchor.MiddleCenter);
-                if (GUI.Button(new Rect(x,y,135,133),GUIContent.none,GUIStyle.none)) {
+                float x=408+(i%4)*118, y=455+(i/4)*92;
+                Picture(avatars[i],new Rect(x+18,y+1,70,70));
+                Label(x,y+69,108,20,Roster.ShortNames[i],15,cream,TextAnchor.MiddleCenter);
+                for(int p=0;p<2;p++) if(selected[p]==i) {
+                    Color c=p==0?new Color(.4f,.85f,1):new Color(1,.4f,.55f);
+                    Box(x,y+p*87,108,3,c); Box(x+(p==0?0:105),y,3,90,c);
+                    Label(x+p*54,y,54,20,"P"+(p+1)+(ready[p]?" OK":""),15,c,TextAnchor.MiddleCenter);
+                }
+                if (GUI.Button(new Rect(x,y,108,90),GUIContent.none,GUIStyle.none)) {
                     int p=ready[0]?1:0; if (!ready[p]) { selected[p]=i; Sound("select"); }
                 }
             }
-            Label(340,632,600,34,"BOTH PLAYERS LOCK IN TO BEGIN  /  ESC TO UNLOCK",18,gold,TextAnchor.MiddleCenter);
+            Label(390,650,500,28,"BOTH LOCK IN TO CHOOSE AN ARENA / ESC UNLOCKS",16,gold,TextAnchor.MiddleCenter);
         }
         void SelectPanel(int p,float x)
         {
-            int id=selected[p]; Color c=Roster.Colors[id];
-            Frame(x,182,300,432); Box(x+15,187,270,2,c);
-            Label(x+15,192,270,30,"PLAYER "+(p+1)+(ready[p]?"  /  READY":"  /  SELECTING"),21,c);
-            DrawSprite(id,Pose.Idle,Mathf.FloorToInt(animationTime*6)%4,new Rect(x+48,224,204,204),p==0?1:-1);
-            Label(x+15,418,270,43,Roster.Names[id],26,cream);
-            Label(x+15,463,270,28,Roster.Titles[id],18,c);
-            Label(x+15,495,270,44,Roster.Powers[id],19,cream);
-            Label(x+15,539,270,23,p==0?"A/D/W/S  SELECT   F  LOCK":"ARROWS  SELECT   J  LOCK",16,gold);
-            if (Button(x+15,570,270,34,ready[p]?"UNLOCK":"LOCK IN")) { ready[p]=!ready[p]; Sound("confirm"); }
+            int id=selected[p]; Color c=p==0?new Color(.4f,.85f,1):new Color(1,.4f,.55f);
+            // The original high resolution pixel concept is used for the full-height showcase.
+            Rect art=new Rect(p==0?70:700,112,510,510);
+            if(showcases[id]!=null) {
+                Rect uv=new Rect(p==0?0:1,0,p==0?1:-1,1);
+                GUI.DrawTextureWithTexCoords(art,showcases[id],uv,true);
+            } else DrawSprite(id,Pose.Idle,(int)(animationTime*6)%4,art,p==0?1:-1);
+            float y=365;
+            Box(x,y,320,84,new Color(.025f,.025f,.06f,.78f));
+            Box(x,y,320,2,c);
+            Label(x,y+5,320,26,"PLAYER "+(p+1)+(ready[p]?" / OATH SEALED":" / SELECTING"),19,c,p==0?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
+            Label(x,y+34,320,43,Roster.ShortNames[id],38,cream,p==0?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
+            Frame(x,460,320,147);
+            Label(x+14,470,292,25,Roster.Names[id],20,cream);
+            Label(x+14,498,292,24,Roster.Titles[id],17,Roster.Colors[id]);
+            Label(x+14,527,292,42,Roster.Powers[id]+" / "+Roster.Weapons[id],18,cream);
+            Label(x+14,574,292,25,p==0?"WASD SELECT / F LOCK":"ARROWS SELECT / J LOCK",16,gold);
+            if (Button(x,620,320,40,ready[p]?"UNSEAL OATH":"SEAL OATH / LOCK IN")) { ready[p]=!ready[p]; Sound("confirm"); }
         }
-        float GroundY => model!=null && model.round==2 ? 590 : 557;
+        void DrawStageSelect()
+        {
+            Picture(stages[selectedArena],new Rect(0,0,1280,720)); Box(0,0,1280,720,new Color(.02f,.025f,.06f,.72f));
+            Label(0,55,1280,65,"CHOOSE THE OPENING ARENA",42,cream,TextAnchor.MiddleCenter);
+            Label(0,128,1280,30,"THREE ARENAS / 99 SECONDS EACH / ONLY RIFTS ELIMINATE",20,gold,TextAnchor.MiddleCenter);
+            for(int i=0;i<3;i++) {
+                float x=55+i*400; Frame(x,240,370,266);
+                Picture(stages[i],new Rect(x+10,250,350,197));
+                if(selectedArena==i) Box(x,236,370,4,gold);
+                Label(x+10,450,350,24,Roster.Stages[i],20,cream,TextAnchor.MiddleCenter);
+                Label(x+10,478,350,22,Roster.LightModes[i],18,gold,TextAnchor.MiddleCenter);
+                if(GUI.Button(new Rect(x,240,370,266),GUIContent.none,GUIStyle.none)) { selectedArena=i; Sound("select"); }
+            }
+            if(Button(440,555,400,54,"BEGIN THE DUEL / ENTER")) StartMatch();
+            Label(0,625,1280,28,"A/D OR ARROWS SELECT / ESC BACK / ALL THREE ARENAS FOLLOW IN ORDER",18,gold,TextAnchor.MiddleCenter);
+        }
+        float GroundY => model!=null && model.ArenaIndex==1 ? 590 : 557;
         void DrawFight()
         {
-            Picture(stages[model.round-1],new Rect(0,0,1280,720));
+            Picture(stages[model.ArenaIndex],new Rect(0,0,1280,720));
             // Ground corresponds to the stage art's upper stone walkway.
             foreach (float hole in new[]{DuelModel.LeftRiftX,DuelModel.RightRiftX}) {
                 DrawRift(hole);
@@ -207,13 +250,13 @@ namespace Hexbound
             for (int i=0;i<2;i++) {
                 var p=model.players[i];
                 Box(p.x-33,GroundY,66,6,new Color(0,0,0,.4f));
-                int frame=p.pose==Pose.Knockout?Mathf.Min(3,(int)(resultTime*8)):p.actionTime>0?Mathf.Clamp((int)((1-p.actionTime/p.actionLength)*4),0,3):(int)(animationTime*8)%4;
+                int frame=p.pose==Pose.Knockout?Mathf.Min(3,(int)((p.fallen?resultTime:p.knockdownElapsed)*8)):p.actionTime>0?Mathf.Clamp((int)((1-p.actionTime/p.actionLength)*4),0,3):(int)(animationTime*8)%4;
                 if (!p.fallen || resultTime<.8f) {
                     float fall=p.fallen?Mathf.Clamp01(resultTime/.8f):0;
                     float size=192*(1-fall*.8f);
                     DrawSprite(p.character,p.pose,frame,new Rect(p.x-size/2,GroundY+18-p.height-size+fall*40,size,size),p.facing);
                 }
-                if (!p.fallen) Label(p.x-50,GroundY-207-p.height,100,25,"P"+(i+1)+(p.blocking?" GUARD":""),18,i==0?new Color(.45f,.85f,1):new Color(1,.5f,.6f),TextAnchor.MiddleCenter);
+                if (!p.fallen) Label(p.x-50,GroundY-207-p.height,100,25,"P"+(i+1)+(p.IsKnockedDown?" DOWN":p.blocking?" GUARD":""),18,i==0?new Color(.45f,.85f,1):new Color(1,.5f,.6f),TextAnchor.MiddleCenter);
                 if (p.combo>1 && p.comboWindow>0) Label(p.x-65,GroundY-240-p.height,130,28,p.combo+" HIT CHAIN",20,gold,TextAnchor.MiddleCenter);
             }
             foreach (var spell in model.spells) DrawEffect(spell.character,spell.x,GroundY-77-spell.height,spell.ultimate?144:86,(int)(animationTime*18)%8);
@@ -223,7 +266,7 @@ namespace Hexbound
             Label(577,22,126,66,Mathf.CeilToInt(model.remaining).ToString("00"),54,model.remaining<=10?new Color(1,.4f,.4f):cream,TextAnchor.MiddleCenter);
             Label(577,87,126,25,"ROUND "+model.round+" / 3",16,gold,TextAnchor.MiddleCenter);
             Frame(415,127,450,40);
-            Label(0,133,1280,30,Roster.Stages[model.round-1],20,cream,TextAnchor.MiddleCenter);
+            Label(0,133,1280,30,Roster.Stages[model.ArenaIndex]+" / "+Roster.LightModes[model.ArenaIndex],18,cream,TextAnchor.MiddleCenter);
             Frame(0,637,1280,46);
             Label(30,645,570,27,"P1   A/D MOVE   W JUMP   S GUARD   F PUNCH   G PUSH   R SPELL   T POWER",16,cream);
             Label(655,645,610,27,"P2   ARROWS MOVE/JUMP/GUARD   J PUNCH   K PUSH   U SPELL   I POWER",16,cream);
@@ -248,7 +291,10 @@ namespace Hexbound
         {
             var p=model.players[side]; float x=side==0?30:735; Color accent=Roster.Colors[p.character];
             Frame(x,20,515,100);
-            float avatarX=side==0?x:x+435; Picture(avatars[p.character],new Rect(avatarX,26,80,80));
+            float avatarX=side==0?x:x+435; if(portraits[p.character]!=null) {
+                int reaction=p.IsKnockedDown||p.fallen?2:p.stun>0?1:model.Finished&&model.winner==side?3:0;
+                GUI.DrawTextureWithTexCoords(new Rect(avatarX,26,80,80),portraits[p.character],new Rect((reaction%2)*.5f,1-(reaction/2+1)*.5f,.5f,.5f),true);
+            } else Picture(avatars[p.character],new Rect(avatarX,26,80,80));
             float bx=side==0?x+90:x+10;
             Label(bx,31,415,25,"P"+(side+1)+"  "+Roster.Names[p.character],23,cream,side==0?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
             Label(bx,55,415,24,"RING OUT YOUR RIVAL",18,accent,side==0?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
@@ -281,7 +327,7 @@ namespace Hexbound
         {
             Frame(180,160,920,420);
             Label(220,180,840,52,"THE DUELIST'S HANDBOOK",35,cream);
-            Label(220,245,840,245,"P1: A / D move, W jump, S guard, F punch, G shove, R spell, T power.\nP2: Left / Right move, Up jump, Down guard, J punch, K shove, U spell, I power.\n\nTap punch three times with a short pause between strikes to finish a combo.\nSpells cost 20 arcana; power attacks cost 60. Arcana regenerates.\nEvery attack knocks back. Drive your rival into a rune rift at either stage edge.\nPlay all 3 arenas. 99 seconds per round. No ring out means a draw. Most round wins takes the match.\nESC pauses. M mutes. H closes this panel.",23,cream);
+            Label(220,245,840,245,"P1: A / D move, W jump, S guard, F punch, G shove, R spell, T power.\nP2: Left / Right move, Up jump, Down guard, J punch, K shove, U spell, I power.\n\nTap punch three times with a short pause between strikes to finish a combo.\nSpells cost 20 arcana; power attacks cost 60. Arcana regenerates.\nFour unguarded hits knock a duelist down temporarily, never eliminate.\nEvery attack knocks back. Drive your rival into a rune rift at either stage edge.\nPlay all 3 arenas. 99 seconds per round. No ring out means a draw. Most round wins takes the match.\nESC pauses. M mutes. H closes this panel.",23,cream);
             if (Button(455,510,370,45,"CLOSE HANDBOOK")) help=false;
         }
         void OnApplicationFocus(bool focus) { if (!focus && screen==ScreenState.Fight && model!=null && !model.Finished) paused=true; }

@@ -33,12 +33,12 @@ Updated: 23 October 2026. Checked boxes mean implemented or specifically verifie
 
 ## Validation and delivery
 
-- [x] Run 53 pure C# combat assertions for ring-out-only combat.
+- [x] Run 63 pure C# combat assertions for ring-out-only combat.
 - [x] Unity 6000.2.2f1 compilation and asset-import validation on this Mac.
 - [x] Finish visual runtime smoke test and record result (Unity 6000.2.2f1; full Game view previews included).
 - [x] Commit initial game locally (`f1e0543`).
-- [ ] Upload all updates to origin/main — blocked: this Mac has no GitHub HTTPS credentials. `git push -u origin main` failed with `could not read Username`; sign in to GitHub, then retry.
-- [x] Keep this Mac on verified Unity 6000.2.2f1 and record it as the project version.
+- [x] Authenticate GitHub CLI and publish the project to the exact requested origin/main.
+- [x] Verify original prototype on Unity 6000.2.2f1; preserve the current local Editor upgrade to 6000.3.27f1.
 - [ ] Two-person keyboard test: movement, simultaneous input, combo timing, guards and jumps.
 - [ ] Auditory check of music loops and every sound cue through Mac output.
 - [ ] Play through all three stages using several fighter matchups; tune balance.
@@ -62,8 +62,18 @@ Updated: 23 October 2026. Checked boxes mean implemented or specifically verifie
 
 ## Your first playtest
 
-Open `Assets/Scenes/Main.unity`, press Play, Enter, then F and J to lock the default fighters. Use A/D/W/S + F/G/R/T for P1 and arrows + J/K/U/I for P2. Press H for help, Escape to pause and M for mute. After each result, Enter advances. Record bugs and preferences below.
+Open `Assets/Scenes/Main.unity`, press Play, any key, then F and J to lock the default fighters. Choose the opening stage and press Enter. Use A/D/W/S + F/G/R/T for P1 and arrows + J/K/U/I for P2. Press H for help, Escape to pause and M for mute. After each result, Enter advances. Record bugs and preferences below.
 
 | Date | What you tried | What happened | Next action |
 | --- | --- | --- | --- |
 | | | | |
+
+## Selection and rules update
+
+- [x] Text-only wizard title with any-key/click start.
+- [x] Reference-inspired opposing fighter previews, side biographies, compact center roster and independent locks.
+- [x] Opening-stage selection with morning, afternoon and night previews.
+- [x] Four-hit temporary knockdown, recovery, guard immunity to hit counting, ring-out-only elimination.
+- [x] Native saved Main scene preview before Play.
+
+- [x] Save eight independently generated head-reaction sheets (32 frames) and wire them to live HUD and roster.

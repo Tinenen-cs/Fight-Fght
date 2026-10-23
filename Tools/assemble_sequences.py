@@ -46,7 +46,8 @@ for i,char in enumerate(manifest['characters']):
     left=min(x for x,y in points); right=max(x for x,y in points)+1
     head=idle.crop((max(0,left-2),max(0,top-2),min(128,right+2),min(128,bottom+2)))
     head.thumbnail((60,60),Image.Resampling.NEAREST)
-    avatar=Image.new('RGBA',(64,64)); avatar.alpha_composite(head,((64-head.width)//2,(64-head.height)//2));avatar.save(folder/'avatar.png')
+    avatar=Image.new('RGBA',(64,64)); avatar.alpha_composite(head,((64-head.width)//2,(64-head.height)//2));
+    if not (folder/'portraits.png').exists(): avatar.save(folder/'avatar.png')
     x=(i%4)*192; y=(i//4)*216
     contact.alpha_composite(idle.resize((160,160),Image.Resampling.NEAREST),(x+16,y+8))
     draw.text((x+8,y+177),char['name'],fill='#f2e3c9')

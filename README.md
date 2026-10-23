@@ -8,12 +8,12 @@ The supplied fighting-game screenshots inspire the **UI arrangement only**: oppo
 
 ## Download & play
 
-Repository: **[Tinenen-cs/Fight-Fght](https://github.com/Tinenen-cs/Fight-Fght)**. The first prototype is committed locally; upload is pending GitHub sign-in on this Mac. Open the local project in Unity to test. No standalone application, mobile package, or online multiplayer service is included.
+Repository: **[Tinenen-cs/Fight-Fght](https://github.com/Tinenen-cs/Fight-Fght)**. GitHub sign-in is complete and the prototype is published to this repository. Open the local project in Unity to test. No standalone application, mobile package, or online multiplayer service is included.
 
 | Device | Output | Status |
 | --- | --- | --- |
 | macOS | Unity Editor playtest | Compiled, asset-validated and visually smoke-tested with installed 6000.2.2f1 |
-| Project Unity version | 6000.2.2f1 | Selected for this Mac and verified |
+| Project Unity version | 6000.3.27f1 | Current local Editor; original prototype also verified on 6000.2.2f1 |
 | Windows / Linux | Editor / future desktop build | Not tested |
 | Browser / mobile | Future builds | No touch controls or builds |
 
@@ -153,11 +153,11 @@ Tiny5 comes from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/ti
    git clone https://github.com/Tinenen-cs/Fight-Fght.git
    cd Fight-Fght
    ```
-2. In **Unity Hub → Installs**, select **6000.2.2f1**. This is the installed, verified version for this Mac and is recorded in `ProjectSettings/ProjectVersion.txt`.
+2. In **Unity Hub → Installs**, select **6000.2.2f1**. The original prototype was verified with this version. Your currently open Editor has updated the project record to 6000.3.27f1; this update is also checked there.
 3. In **Projects → Add project from disk**, choose the root `Fight-Fght` folder containing `Assets`, `Packages`, and `ProjectSettings`.
 4. Let Unity finish importing and compiling. Open **Assets → Scenes → Main**, or use **Hexbound → Open Main Scene**.
-5. Open the **Game** tab, choose **16:9** (preferably **1280 × 720**), and press **Play**. The title/UI appears during Play.
-6. Click inside the Game view. Press **Enter**, choose both characters, and lock in with **F** and **J**.
+5. Open the **Game** tab, choose **16:9** (preferably **1280 × 720**), and press **Play**. Main includes a visible arena preview before Play; the title and interactive UI run during Play.
+6. Click inside the Game view. Press **any key or click**, choose both characters, and lock in with **F** and **J**. Choose the opening arena with A/D or arrows, then press Enter.
 7. Follow the controls above. Press **Enter** after each round result to continue.
 8. Open the same project folder in **VS Code**. Unity is the game editor; VS Code is the code editor, with Codex available to assist. Accept the recommended C# and Unity extensions as needed.
 9. Keep the Unity Console open while testing. Stop Play before editing settings or saving scene changes.
@@ -168,8 +168,8 @@ Desktop source may be opened with Unity, but Windows/Linux and standalone builds
 
 ## Troubleshooting
 
-- **Version mismatch:** select **6000.2.2f1** in Unity Hub for this project. No editor upgrade is needed on this Mac.
-- **Empty scene / no UI before Play:** open Main and press Play. The runtime UI is intentionally generated when the game runs.
+- **Version mismatch:** the current project record follows your open **6000.3.27f1** Editor. The original prototype was tested on **6000.2.2f1**; avoid switching a project while it is open in another Editor.
+- **Empty scene:** use Hexbound → Open Main Scene. Main contains a saved arena preview visible before Play; the full menu appears after Play. Use Hexbound → Prepare Visible Scene Preview to rebuild the preview. Unsaved scenes are preserved.
 - **Keys do nothing:** click the Game view. Escape resumes after focus loss. Under Project Settings → Player, keep Active Input Handling on **Input Manager (Old)** or **Both**; this project uses `UnityEngine.Input`.
 - **Too many simultaneous keys:** some keyboards cannot register both players' held keys. Try a second USB keyboard or release guard before attacking; physical keyboard testing is pending.
 - **No sound:** press M, disable the Game view mute toggle, and check macOS output volume.
@@ -191,3 +191,11 @@ Desktop source may be opened with Unity, but Windows/Linux and standalone builds
    ```
 
 Do not commit Unity caches, credentials, local logs, or generated application builds. To rebuild runtime art from committed sources, install Pillow and run `python3 Tools/import_academy_art.py`, then `python3 Tools/assemble_sequences.py`. `python3 Tools/generate_assets.py` regenerates audio and only fills missing legacy artwork; existing final art is preserved and let Unity reimport. See [Docs/ASSET_GUIDE.md](Docs/ASSET_GUIDE.md) before changing sheet dimensions.
+
+## Updated duel flow
+
+Press any key or click on the text-only wizard title → both players choose apprentices → choose the opening arena → duel. Character selection uses opposing large fighter artwork, side biographies, and a compact two-row roster inspired by the supplied layout. Each fighter has four authored head reactions for the HUD: focused, hurt, dazed and victorious.
+
+Every round lasts 99 seconds. No ring-out before time expires means a draw, including when a fighter is knocked down. Four unguarded hits cause a 1.4-second knockdown, then the fighter recovers; knockdown never awards a win. Guarded hits do not count. Only falling into either forbidden rune rift eliminates a fighter. All three arenas rotate from your selected opening stage: morning gates, afternoon library, night observatory.
+
+Head artwork and prompts are in `Assets/Art/PortraitSources` and `Docs/portrait_art_manifest.json`; rebuild with `python3 Tools/import_portraits.py`. Title typography uses Cinzel Decorative, licensed under the included OFL in `Assets/Art/Fonts`.

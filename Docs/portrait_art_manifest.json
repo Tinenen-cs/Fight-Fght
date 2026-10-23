@@ -1,0 +1,46 @@
+{
+  "tool": "built-in image_gen",
+  "layout": "2x2 focused, hurt, dazed, victorious",
+  "portraits": [
+    {
+      "key": "Lyra",
+      "prompt": "Use case: identity-preserve. Create a production pixel-art HUD head portrait reaction sheet for this exact magical academy fighter from the reference. EXACTLY four frames in an evenly spaced 2x2 grid, transparent background, square image. Each cell contains ONLY full head, hair (including hat if present), neck and very tiny collar, no torso, no hands, no weapons, no text, no borders. Adult facial proportions, detailed crisp pixel clusters matching reference, not chibi. Same identity, hair, skin, accessories in all four cells. Head centered occupying 75% each cell with clear padding. Top left focused neutral, top right hurt wincing, bottom left dazed closed eyes knocked down, bottom right confident victory smile. Front three-quarter facing right, face large and readable as 64px HUD icon. Preserve character identity and hair colors exactly.",
+      "source": "Assets/Art/PortraitSources/Lyra.png"
+    },
+    {
+      "key": "Mira",
+      "prompt": "Use case: identity-preserve. Create a production pixel-art HUD head portrait reaction sheet for this exact magical academy fighter from the reference. EXACTLY four frames in an evenly spaced 2x2 grid, transparent background, square image. Each cell contains ONLY full head, hair (including hat if present), neck and very tiny collar, no torso, no hands, no weapons, no text, no borders. Adult facial proportions, detailed crisp pixel clusters matching reference, not chibi. Same identity, hair, skin, accessories in all four cells. Head centered occupying 75% each cell with clear padding. Top left focused neutral, top right hurt wincing, bottom left dazed closed eyes knocked down, bottom right confident victory smile. Front three-quarter facing right, face large and readable as 64px HUD icon. Preserve character identity and hair colors exactly.",
+      "source": "Assets/Art/PortraitSources/Mira.png"
+    },
+    {
+      "key": "Selene",
+      "prompt": "Use case: identity-preserve. Create a production pixel-art HUD head portrait reaction sheet for this exact magical academy fighter from the reference. EXACTLY four frames in an evenly spaced 2x2 grid, transparent background, square image. Each cell contains ONLY full head, hair (including hat if present), neck and very tiny collar, no torso, no hands, no weapons, no text, no borders. Adult facial proportions, detailed crisp pixel clusters matching reference, not chibi. Same identity, hair, skin, accessories in all four cells. Head centered occupying 75% each cell with clear padding. Top left focused neutral, top right hurt wincing, bottom left dazed closed eyes knocked down, bottom right confident victory smile. Front three-quarter facing right, face large and readable as 64px HUD icon. Preserve character identity and hair colors exactly.",
+      "source": "Assets/Art/PortraitSources/Selene.png"
+    },
+    {
+      "key": "Iris",
+      "prompt": "Use case: identity-preserve. Create a production pixel-art HUD head portrait reaction sheet for this exact magical academy fighter from the reference. EXACTLY four frames in an evenly spaced 2x2 grid, transparent background, square image. Each cell contains ONLY full head, hair (including hat if present), neck and very tiny collar, no torso, no hands, no weapons, no text, no borders. Adult facial proportions, detailed crisp pixel clusters matching reference, not chibi. Same identity, hair, skin, accessories in all four cells. Head centered occupying 75% each cell with clear padding. Top left focused neutral, top right hurt wincing, bottom left dazed closed eyes knocked down, bottom right confident victory smile. Front three-quarter facing right, face large and readable as 64px HUD icon. Preserve character identity and hair colors exactly.",
+      "source": "Assets/Art/PortraitSources/Iris.png"
+    },
+    {
+      "key": "Alden",
+      "prompt": "Use case: identity-preserve. Create a production pixel-art HUD head portrait reaction sheet for this exact magical academy fighter from the reference. EXACTLY four frames in an evenly spaced 2x2 grid, transparent background, square image. Each cell contains ONLY full head, hair (including hat if present), neck and very tiny collar, no torso, no hands, no weapons, no text, no borders. Adult facial proportions, detailed crisp pixel clusters matching reference, not chibi. Same identity, hair, skin, accessories in all four cells. Head centered occupying 75% each cell with clear padding. Top left focused neutral, top right hurt wincing, bottom left dazed closed eyes knocked down, bottom right confident victory smile. Front three-quarter facing right, face large and readable as 64px HUD icon. Preserve character identity and hair colors exactly.",
+      "source": "Assets/Art/PortraitSources/Alden.png"
+    },
+    {
+      "key": "Rowan",
+      "prompt": "Use case: identity-preserve. Create a production pixel-art HUD head portrait reaction sheet for this exact magical academy fighter from the reference. EXACTLY four frames in an evenly spaced 2x2 grid, transparent background, square image. Each cell contains ONLY full head, hair (including hat if present), neck and very tiny collar, no torso, no hands, no weapons, no text, no borders. Adult facial proportions, detailed crisp pixel clusters matching reference, not chibi. Same identity, hair, skin, accessories in all four cells. Head centered occupying 75% each cell with clear padding. Top left focused neutral, top right hurt wincing, bottom left dazed closed eyes knocked down, bottom right confident victory smile. Front three-quarter facing right, face large and readable as 64px HUD icon. Preserve character identity and hair colors exactly.",
+      "source": "Assets/Art/PortraitSources/Rowan.png"
+    },
+    {
+      "key": "Orion",
+      "prompt": "Use case: identity-preserve. Create a production pixel-art HUD head portrait reaction sheet for this exact magical academy fighter from the reference. EXACTLY four frames in an evenly spaced 2x2 grid, transparent background, square image. Each cell contains ONLY full head, hair (including hat if present), neck and very tiny collar, no torso, no hands, no weapons, no text, no borders. Adult facial proportions, detailed crisp pixel clusters matching reference, not chibi. Same identity, hair, skin, accessories in all four cells. Head centered occupying 75% each cell with clear padding. Top left focused neutral, top right hurt wincing, bottom left dazed closed eyes knocked down, bottom right confident victory smile. Front three-quarter facing right, face large and readable as 64px HUD icon. Preserve character identity and hair colors exactly.",
+      "source": "Assets/Art/PortraitSources/Orion.png"
+    },
+    {
+      "key": "Dorian",
+      "prompt": "Use case: identity-preserve. Create a production pixel-art HUD head portrait reaction sheet for this exact magical academy fighter from the reference. EXACTLY four frames in an evenly spaced 2x2 grid, transparent background, square image. Each cell contains ONLY full head, hair (including hat if present), neck and very tiny collar, no torso, no hands, no weapons, no text, no borders. Adult facial proportions, detailed crisp pixel clusters matching reference, not chibi. Same identity, hair, skin, accessories in all four cells. Head centered occupying 75% each cell with clear padding. Top left focused neutral, top right hurt wincing, bottom left dazed closed eyes knocked down, bottom right confident victory smile. Front three-quarter facing right, face large and readable as 64px HUD icon. Preserve character identity and hair colors exactly.",
+      "source": "Assets/Art/PortraitSources/Dorian.png"
+    }
+  ]
+}

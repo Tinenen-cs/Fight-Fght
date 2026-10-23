@@ -81,6 +81,37 @@ namespace Hexbound
             d.Tick(.016f,default(DuelInput),default(DuelInput));
             Check(d.Finished && d.winner==-1 && d.players[0].fallen && d.players[1].fallen,"simultaneous falls into opposite rifts draw");
             Check(d.players[0].wins==0 && d.players[1].wins==0,"simultaneous ring-out awards no win");
+            d=new DuelModel(0,4,2);
+            Check(d.ArenaIndex==2,"selected arena opens match");
+            d.elapsed=99; d.Tick(.016f,default(DuelInput),default(DuelInput)); d.NextRound();
+            Check(d.ArenaIndex==0,"arenas rotate from selected opening stage");
+            d=Close();
+            for(int hit=0;hit<4;hit++) {
+                d.players[0].x=400; d.players[1].x=495; d.players[1].knockback=0;
+                d.Tick(1f/60,new DuelInput { punch=true },default(DuelInput)); Step(d,20);
+                if(hit==2) Check(!d.players[1].IsKnockedDown,"three hits do not knock down");
+            }
+            Check(d.players[1].IsKnockedDown && !d.Finished && !d.players[1].fallen,"four hits knock down without elimination");
+            Check(d.players[0].wins==0 && d.players[1].wins==0,"knockdown awards no round win");
+            float downX=d.players[1].x;
+            d.players[1].knockback=0; d.players[1].mana=100;
+            d.Tick(.016f,default(DuelInput),new DuelInput { move=1,jump=true,power=true,block=true });
+            Check(d.players[1].x==downX && d.players[1].verticalSpeed==0 && d.players[1].actionTime==0 && !d.players[1].blocking,"downed fighter cannot move jump cast or guard");
+            Step(d,100);
+            Check(!d.players[1].IsKnockedDown && d.players[1].hitsTowardKnockdown==0,"knockdown recovers and resets hit count");
+            d.players[1].knockdownTime=1; d.players[1].x=DuelModel.LeftRiftX;
+            d.Tick(.016f,default(DuelInput),default(DuelInput));
+            Check(d.winner==0 && d.players[1].fallen,"downed fighter still falls into rift");
+            d=Close();
+            for(int hit=0;hit<5;hit++) {
+                d.players[0].x=400; d.players[1].x=495; d.players[1].knockback=0;
+                d.Tick(1f/60,new DuelInput { punch=true },new DuelInput { block=true });
+                Step(d,25,default(DuelInput),new DuelInput { block=true });
+            }
+            Check(!d.players[1].IsKnockedDown && d.players[1].hitsTowardKnockdown==0,"guarded hits do not count toward knockdown");
+            d.players[1].knockdownTime=1; d.elapsed=98.99f;
+            d.Tick(.02f,default(DuelInput),default(DuelInput));
+            Check(d.winner==-1 && !d.players[1].fallen,"timeout with downed fighter is still draw");
             return count;
         }
     }
