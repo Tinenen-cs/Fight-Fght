@@ -77,7 +77,7 @@ namespace Hexbound
                 if (ready[0] && ready[1]) OpenStageSelect();
                 return;
             }
-            if(paused && controls.Any("Cancel")) { OpenSelect(); return; }
+            if(paused && controls.Any("Cancel") && !controls.Any("Pause")) { OpenSelect(); return; }
             if (paused || help) return;
             if (model.Finished) {
                 resultTime+=Time.deltaTime;

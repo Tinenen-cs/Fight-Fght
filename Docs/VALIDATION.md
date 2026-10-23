@@ -151,3 +151,9 @@ Physical controller pairing, human keyboard feel and listening remain manual che
 ![Half-time portals](Previews/12-half-time-portals.png)
 
 ![Final fifteen-second portals](Previews/13-final-portals.png)
+
+## Complete keyboard/controller flow and pause regression
+
+**36 input/start/flow assertions passed** in Unity 6000.3.27f1, using actual AcademyGame.Update calls and virtual keyboard/gamepads. Added checks cover independent fighter navigation, one-player lock waiting for the other player, both locks advancing, opening-arena navigation and confirmation, selected arena reaching the combat model, a real keyboard attack reaching combat, Escape pause/resume, two independent controller confirmations, controller arena start, Menu/Options pause and controller back from pause.
+
+The added pause test caught an overlap: Escape was mapped to both pause and cancel, allowing the newly paused fight to return immediately to selection. Cancel now returns to selection only when the same input is not also the pause action. Escape reliably pauses/resumes; controller east-face back still works from pause. All **73 combat assertions** also pass. Physical controller and two-person keyboard checks remain pending.

@@ -109,3 +109,7 @@ Open `Assets/Scenes/Main.unity`, press Play, any key, then F and J to lock the d
 - [x] Rebuild 256px fighter frames, 1280×720 stages and higher-resolution VFX/portraits/icons; preserve full source color and enable bilinear filtering.
 - [x] Grow portal art and collision together at half-time and final 15 seconds; verify both sides, jumping and timeout draws.
 - [x] Pass 73 combat and 22 input/start assertions.
+
+- [x] Verify the complete keyboard and two-controller selection/stage/combat flow through the actual runtime update.
+- [x] Fix Escape pause/cancel overlap and verify pause/resume retains the duel.
+- [x] Pass 36 input/start/flow assertions and 73 combat assertions.
