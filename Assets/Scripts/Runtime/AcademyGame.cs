@@ -9,13 +9,15 @@ namespace Hexbound
         ScreenState screen;
         readonly int[] selected={0,4};
         readonly bool[] ready={false,false};
-        Texture2D[] portraits=new Texture2D[8], showcases=new Texture2D[8];
+        Texture2D[] portraits=new Texture2D[8], showcases=new Texture2D[8], abilityIcons=new Texture2D[8];
         int selectedArena;
         Texture2D[] sheets=new Texture2D[8], avatars=new Texture2D[8], effects=new Texture2D[8], stages=new Texture2D[3];
         readonly Dictionary<string,AudioClip> clips=new Dictionary<string,AudioClip>();
         Texture2D riftSheet, academyPanel, academyButton;
         AudioSource music, sfx;
         DuelModel model;
+        AcademyInputManager controls;
+        Texture2D runeDisc;
         float countdown, resultTime, animationTime;
         bool paused, help, muted;
         int lastSecond;
@@ -27,6 +29,8 @@ namespace Hexbound
         void Awake()
         {
             Application.targetFrameRate=60;
+            controls=new AcademyInputManager();
+            runeDisc=CreateRuneDisc();
             riftSheet=Resources.Load<Texture2D>("Stages/RuneRift");
             academyPanel=Resources.Load<Texture2D>("UI/AcademyPanel");
             academyButton=Resources.Load<Texture2D>("UI/AcademyButton");
@@ -36,6 +40,7 @@ namespace Hexbound
                 avatars[i]=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/avatar");
                 portraits[i]=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/portraits");
                 showcases[i]=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/showcase");
+                abilityIcons[i]=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/abilities");
                 effects[i]=Resources.Load<Texture2D>("Effects/"+Roster.Files[i]);
             }
             for (int i=0;i<3;i++) stages[i]=Resources.Load<Texture2D>("Stages/"+Roster.StageFiles[i]);
@@ -51,29 +56,32 @@ namespace Hexbound
         bool Key(KeyCode code) => Input.GetKeyDown(code);
         void Update()
         {
-            if (screen==ScreenState.Title) { animationTime+=Time.deltaTime; if (Input.anyKeyDown) OpenSelect(); return; }
+            controls.Poll(Time.unscaledTime);
+            if(controls.ControllerDisconnected && screen==ScreenState.Fight && !model.Finished) paused=true;
+            if (screen==ScreenState.Title) { animationTime+=Time.deltaTime; if (controls.StartPressed) OpenSelect(); return; }
             if (Key(KeyCode.M)) { muted=!muted; AudioListener.volume=muted?0:1; PlayerPrefs.SetInt("Hexbound.Mute",muted?1:0); }
-            if (Key(KeyCode.H)) help=!help;
-            if (Key(KeyCode.Escape) && screen==ScreenState.Fight && !model.Finished) paused=!paused;
+            if (controls.Any("Help")) help=!help;
+            if (controls.Any("Pause") && screen==ScreenState.Fight && !model.Finished) paused=!paused;
             if (!paused) animationTime+=Time.deltaTime;
             if (screen==ScreenState.StageSelect) {
-                if (Key(KeyCode.A)||Key(KeyCode.LeftArrow)) { selectedArena=(selectedArena+2)%3; Sound("select"); }
-                if (Key(KeyCode.D)||Key(KeyCode.RightArrow)) { selectedArena=(selectedArena+1)%3; Sound("select"); }
-                if (Key(KeyCode.Return)) StartMatch();
-                else if (Key(KeyCode.Escape)) OpenSelect();
+                if (controls.Navigate(0).x<0||controls.Navigate(1).x<0) { selectedArena=(selectedArena+2)%3; Sound("select"); }
+                if (controls.Navigate(0).x>0||controls.Navigate(1).x>0) { selectedArena=(selectedArena+1)%3; Sound("select"); }
+                if (controls.Any("Confirm")) StartMatch();
+                else if (controls.Any("Cancel")) OpenSelect();
                 return;
             }
             if (screen==ScreenState.Select) {
-                SelectKeys(0,KeyCode.A,KeyCode.D,KeyCode.W,KeyCode.S,KeyCode.F);
-                SelectKeys(1,KeyCode.LeftArrow,KeyCode.RightArrow,KeyCode.UpArrow,KeyCode.DownArrow,KeyCode.J);
-                if (Key(KeyCode.Escape)) { ready[0]=ready[1]=false; Sound("select"); }
+                SelectKeys(0);
+                SelectKeys(1);
+                for(int p=0;p<2;p++) if(controls.Press(p,"Cancel")) { ready[p]=false; Sound("select"); }
                 if (ready[0] && ready[1]) OpenStageSelect();
                 return;
             }
-            if (paused) return;
+            if(paused && controls.Any("Cancel")) { OpenSelect(); return; }
+            if (paused || help) return;
             if (model.Finished) {
                 resultTime+=Time.deltaTime;
-                if (resultTime>1.2f && Key(KeyCode.Return)) {
+                if (resultTime>1.2f && controls.Any("Confirm")) {
                     if (model.MatchFinished) OpenSelect();
                     else { model.NextRound(); BeginRound(); }
                 }
@@ -85,30 +93,21 @@ namespace Hexbound
                 if (sec!=lastSecond) { Sound("bell"); lastSecond=sec; }
                 return;
             }
-            model.Tick(Mathf.Min(Time.deltaTime,.0333f),ReadInput(0),ReadInput(1));
+            model.Tick(Mathf.Min(Time.deltaTime,.0333f),controls.Read(0),controls.Read(1));
             foreach (string sound in model.sounds) Sound(sound);
             if (model.Finished) resultTime=0;
             int second=Mathf.CeilToInt(model.remaining);
             if (second<=10 && second!=lastSecond) { Sound("bell"); lastSecond=second; }
         }
-        void SelectKeys(int p,KeyCode left,KeyCode right,KeyCode up,KeyCode down,KeyCode confirm)
+        void SelectKeys(int p)
         {
             if (ready[p]) return;
-            int old=selected[p];
-            if (Key(left)) selected[p]=(selected[p]+7)%8;
-            if (Key(right)) selected[p]=(selected[p]+1)%8;
-            if (Key(up)||Key(down)) selected[p]=(selected[p]+4)%8;
-            if (old!=selected[p]) Sound("select");
-            if (Key(confirm)) { ready[p]=true; Sound("confirm"); }
-        }
-        DuelInput ReadInput(int p)
-        {
-            return new DuelInput {
-                move=(Input.GetKey(p==0?KeyCode.D:KeyCode.RightArrow)?1:0)-(Input.GetKey(p==0?KeyCode.A:KeyCode.LeftArrow)?1:0),
-                jump=Key(p==0?KeyCode.W:KeyCode.UpArrow),block=Input.GetKey(p==0?KeyCode.S:KeyCode.DownArrow),
-                punch=Key(p==0?KeyCode.F:KeyCode.J),push=Key(p==0?KeyCode.G:KeyCode.K),
-                special=Key(p==0?KeyCode.R:KeyCode.U),power=Key(p==0?KeyCode.T:KeyCode.I)
-            };
+            int old=selected[p]; var direction=controls.Navigate(p);
+            if(direction.x<0) selected[p]=(selected[p]+7)%8;
+            if(direction.x>0) selected[p]=(selected[p]+1)%8;
+            if(direction.y!=0) selected[p]=(selected[p]+4)%8;
+            if(old!=selected[p]) Sound("select");
+            if(controls.Press(p,"Confirm")) { ready[p]=true; Sound("confirm"); }
         }
         void OpenSelect() { screen=ScreenState.Select; ready[0]=ready[1]=false; paused=false; help=false; PlayMusic("Menu"); Sound("confirm"); }
         void OpenStageSelect() { screen=ScreenState.StageSelect; help=false; Sound("confirm"); }
@@ -125,7 +124,7 @@ namespace Hexbound
             else if (screen==ScreenState.Select) DrawSelect();
             else if (screen==ScreenState.StageSelect) DrawStageSelect();
             else DrawFight();
-            if (screen!=ScreenState.Title) Label(30,690,800,22,"H  CONTROLS     M  "+(muted?"SOUND OFF":"SOUND ON")+"     LOCAL TWO-PLAYER",16,new Color(.62f,.63f,.71f));
+            if (screen!=ScreenState.Title && screen!=ScreenState.Fight) Label(30,690,800,22,"H  CONTROLS     M  "+(muted?"SOUND OFF":"SOUND ON")+"     KEYBOARD / XBOX / PS4",16,new Color(.62f,.63f,.71f));
             if (help) DrawHelp();
         }
         void Box(float x,float y,float w,float h,Color color)
@@ -219,7 +218,7 @@ namespace Hexbound
             Label(x+14,470,292,25,Roster.Names[id],20,cream);
             Label(x+14,498,292,24,Roster.Titles[id],17,Roster.Colors[id]);
             Label(x+14,527,292,42,Roster.Powers[id]+" / "+Roster.Weapons[id],18,cream);
-            Label(x+14,574,292,25,p==0?"WASD SELECT / F LOCK":"ARROWS SELECT / J LOCK",16,gold);
+            Label(x+14,574,292,25,controls.Prompt(p,"Move")+" SELECT / "+controls.Prompt(p,"Confirm")+" LOCK",16,gold);
             if (Button(x,620,320,40,ready[p]?"UNSEAL OATH":"SEAL OATH / LOCK IN")) { ready[p]=!ready[p]; Sound("confirm"); }
         }
         void DrawStageSelect()
@@ -236,16 +235,16 @@ namespace Hexbound
                 if(GUI.Button(new Rect(x,240,370,266),GUIContent.none,GUIStyle.none)) { selectedArena=i; Sound("select"); }
             }
             if(Button(440,555,400,54,"BEGIN THE DUEL / ENTER")) StartMatch();
-            Label(0,625,1280,28,"A/D OR ARROWS SELECT / ESC BACK / ALL THREE ARENAS FOLLOW IN ORDER",18,gold,TextAnchor.MiddleCenter);
+            Label(0,625,1280,28,"STICK / D-PAD / ARROWS SELECT / SOUTH BUTTON OR ENTER CONFIRM / EAST BUTTON BACK",18,gold,TextAnchor.MiddleCenter);
         }
-        float GroundY => model!=null && model.ArenaIndex==1 ? 590 : 557;
+        float GroundY => CombatHudLayout.GroundY;
         void DrawFight()
         {
             Picture(stages[model.ArenaIndex],new Rect(0,0,1280,720));
             // Ground corresponds to the stage art's upper stone walkway.
             foreach (float hole in new[]{DuelModel.LeftRiftX,DuelModel.RightRiftX}) {
                 DrawRift(hole);
-                Label(hole-96,Mathf.Min(GroundY+35,612),192,22,"FORBIDDEN RIFT",14,gold,TextAnchor.MiddleCenter);
+
             }
             for (int i=0;i<2;i++) {
                 var p=model.players[i];
@@ -256,20 +255,19 @@ namespace Hexbound
                     float size=192*(1-fall*.8f);
                     DrawSprite(p.character,p.pose,frame,new Rect(p.x-size/2,GroundY+18-p.height-size+fall*40,size,size),p.facing);
                 }
-                if (!p.fallen) Label(p.x-50,GroundY-207-p.height,100,25,"P"+(i+1)+(p.IsKnockedDown?" DOWN":p.blocking?" GUARD":""),18,i==0?new Color(.45f,.85f,1):new Color(1,.5f,.6f),TextAnchor.MiddleCenter);
+                if(!p.fallen && p.actionTime>0 && (p.pose==Pose.Special || p.pose==Pose.Power))
+                    DrawEffect(p.character,p.x+p.facing*38,GroundY-87-p.height,p.pose==Pose.Power?136:88,(int)(animationTime*16)%8);
+                if (!p.fallen && (p.IsKnockedDown || p.blocking)) Label(p.x-50,GroundY-207-p.height,100,25,p.IsKnockedDown?"DOWN":"GUARD",18,i==0?new Color(.45f,.85f,1):new Color(1,.5f,.6f),TextAnchor.MiddleCenter);
                 if (p.combo>1 && p.comboWindow>0) Label(p.x-65,GroundY-240-p.height,130,28,p.combo+" HIT CHAIN",20,gold,TextAnchor.MiddleCenter);
             }
             foreach (var spell in model.spells) DrawEffect(spell.character,spell.x,GroundY-77-spell.height,spell.ultimate?144:86,(int)(animationTime*18)%8);
             foreach (var burst in model.bursts) DrawEffect(burst.character,burst.x,GroundY-77-burst.height,burst.ultimate?160:110,Mathf.Clamp((int)((.45f-burst.life)/.45f*8),0,7));
             DrawHud(0); DrawHud(1);
-            Frame(577,20,126,99);
-            Label(577,22,126,66,Mathf.CeilToInt(model.remaining).ToString("00"),54,model.remaining<=10?new Color(1,.4f,.4f):cream,TextAnchor.MiddleCenter);
-            Label(577,87,126,25,"ROUND "+model.round+" / 3",16,gold,TextAnchor.MiddleCenter);
-            Frame(415,127,450,40);
-            Label(0,133,1280,30,Roster.Stages[model.ArenaIndex]+" / "+Roster.LightModes[model.ArenaIndex],18,cream,TextAnchor.MiddleCenter);
-            Frame(0,637,1280,46);
-            Label(30,645,570,27,"P1   A/D MOVE   W JUMP   S GUARD   F PUNCH   G PUSH   R SPELL   T POWER",16,cream);
-            Label(655,645,610,27,"P2   ARROWS MOVE/JUMP/GUARD   J PUNCH   K PUSH   U SPELL   I POWER",16,cream);
+            Frame(579,18,122,110);
+            Label(579,21,122,25,"VS",17,gold,TextAnchor.MiddleCenter);
+            Label(579,42,122,59,Mathf.CeilToInt(model.remaining).ToString("00"),54,model.remaining<=10?new Color(1,.4f,.4f):cream,TextAnchor.MiddleCenter);
+            Label(579,99,122,23,"ROUND "+model.round+" / 3",16,gold,TextAnchor.MiddleCenter);
+            DrawControlCluster(0); DrawControlCluster(1);
             if (countdown>0) Overlay(Mathf.CeilToInt(countdown).ToString(),"PREPARE YOUR SPELLS",false);
             else if (model.Finished) {
                 string result=model.winner<0?"ROUND DRAW":Roster.Names[model.players[model.winner].character]+" WINS";
@@ -289,18 +287,49 @@ namespace Hexbound
         }
         void DrawHud(int side)
         {
-            var p=model.players[side]; float x=side==0?30:735; Color accent=Roster.Colors[p.character];
-            Frame(x,20,515,100);
-            float avatarX=side==0?x:x+435; if(portraits[p.character]!=null) {
-                int reaction=p.IsKnockedDown||p.fallen?2:p.stun>0?1:model.Finished&&model.winner==side?3:0;
-                GUI.DrawTextureWithTexCoords(new Rect(avatarX,26,80,80),portraits[p.character],new Rect((reaction%2)*.5f,1-(reaction/2+1)*.5f,.5f,.5f),true);
-            } else Picture(avatars[p.character],new Rect(avatarX,26,80,80));
-            float bx=side==0?x+90:x+10;
-            Label(bx,31,415,25,"P"+(side+1)+"  "+Roster.Names[p.character],23,cream,side==0?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
-            Label(bx,55,415,24,"RING OUT YOUR RIVAL",18,accent,side==0?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
-            Box(bx,81,415,7,new Color(.18f,.19f,.28f)); Box(side==0?bx:bx+415-415*p.mana/100,81,415*p.mana/100,7,new Color(.5f,.55f,1));
-            Label(bx,85,415,22,"WINS "+p.wins+"     ARCANA "+(int)p.mana+" / 100"+(p.mana>=60?"   POWER READY":""),16,gold);
+            var p=model.players[side]; bool left=side==0; Color accent=Roster.Colors[p.character];
+            float x=left?22:714, head=left?25:1163, bar=left?119:722;
+            Frame(x,20,544,93);
+            int reaction=p.IsKnockedDown||p.fallen?2:p.stun>0?1:model.Finished&&model.winner==side?3:0;
+            if(portraits[p.character]!=null) GUI.DrawTextureWithTexCoords(new Rect(head+4,27,82,82),portraits[p.character],new Rect((reaction%2)*.5f,1-(reaction/2+1)*.5f,.5f,.5f),true);
+            Label(bar,27,438,25,Roster.Names[p.character],22,cream,left?TextAnchor.MiddleLeft:TextAnchor.MiddleRight);
+            int remaining=p.IsKnockedDown||p.fallen?0:DuelModel.KnockdownHits-p.hitsTowardKnockdown;
+            for(int i=0;i<DuelModel.KnockdownHits;i++) {
+                float sx=bar+(left?i:4-i)*87;
+                Box(sx,58,82,22,gold); Box(sx+2,60,78,18,i<remaining?accent:new Color(.09f,.08f,.13f));
+                if(i<remaining) Box(sx+4,62,74,3,new Color(1,1,1,.4f));
+            }
+            Box(bar,84,433,5,new Color(.12f,.13f,.2f));
+            Box(left?bar:bar+433-433*p.mana/100,84,433*p.mana/100,5,new Color(.45f,.65f,1));
+            for(int i=0;i<3;i++) Picture(runeDisc,new Rect(left?bar+360+i*24:bar+48-i*24,6,18,18),i<p.wins?gold:new Color(.22f,.23f,.29f));
         }
+        static Texture2D CreateRuneDisc()
+        {
+            var t=new Texture2D(96,96,TextureFormat.RGBA32,false); t.filterMode=FilterMode.Point;
+            for(int y=0;y<96;y++) for(int x=0;x<96;x++) {
+                float r=Vector2.Distance(new Vector2(x,y),new Vector2(47.5f,47.5f));
+                t.SetPixel(x,y,r>47?Color.clear:r>43||r>37&&r<39?Color.white:new Color(.075f,.09f,.15f,.94f));
+            }
+            t.Apply(); return t;
+        }
+        void DrawControlCluster(int side)
+        {
+            var fighter=model.players[side];
+            string[] actions={"Punch","Push","Spell","Power"};
+            var input=controls.Read(side);
+            bool[] active={input.punch,input.push,input.special,input.power};
+            for(int i=0;i<4;i++) {
+                Rect rect=CombatHudLayout.Ability(side,i);
+                bool affordable=i<2 || fighter.mana>=(i==2?20:60);
+                GUI.color=active[i]?new Color(1.4f,1.4f,1.4f):affordable?Color.white:new Color(.4f,.4f,.48f);
+                if(abilityIcons[fighter.character]!=null) GUI.DrawTextureWithTexCoords(rect,abilityIcons[fighter.character],new Rect((i%2)*.5f,1-(i/2+1)*.5f,.5f,.5f),true);
+                GUI.color=Color.white;
+                string key=controls.Prompt(side,actions[i]).Replace("TRIANGLE","TRI").Replace("SQUARE","SQ").Replace("CIRCLE","O").Replace("CROSS","X");
+                Box(rect.x+8,rect.y+34,32,14,new Color(.02f,.025f,.045f,.85f));
+                Label(rect.x+8,rect.y+34,32,14,key,12,cream,TextAnchor.MiddleCenter);
+            }
+        }
+        void OnDestroy() { controls?.Dispose(); if(runeDisc!=null) Destroy(runeDisc); }
         void DrawSprite(int id,Pose pose,int frame,Rect rect,int facing)
         {
             if (sheets[id]==null) return;
@@ -312,7 +341,7 @@ namespace Hexbound
         {
             if (riftSheet==null) { Box(x-36,GroundY-8,72,16,Color.black); return; }
             int frame=(int)(animationTime*6)%4;
-            GUI.DrawTextureWithTexCoords(new Rect(x-72,GroundY-82,144,144),riftSheet,
+            GUI.DrawTextureWithTexCoords(CombatHudLayout.Portal(x),riftSheet,
                 new Rect((frame%2)/2f,1-(frame/2+1)/2f,.5f,.5f),true);
         }
         void DrawEffect(int id,float x,float y,float size,int frame)
@@ -325,10 +354,10 @@ namespace Hexbound
         }
         void DrawHelp()
         {
-            Frame(180,160,920,420);
-            Label(220,180,840,52,"THE DUELIST'S HANDBOOK",35,cream);
-            Label(220,245,840,245,"P1: A / D move, W jump, S guard, F punch, G shove, R spell, T power.\nP2: Left / Right move, Up jump, Down guard, J punch, K shove, U spell, I power.\n\nTap punch three times with a short pause between strikes to finish a combo.\nSpells cost 20 arcana; power attacks cost 60. Arcana regenerates.\nFour unguarded hits knock a duelist down temporarily, never eliminate.\nEvery attack knocks back. Drive your rival into a rune rift at either stage edge.\nPlay all 3 arenas. 99 seconds per round. No ring out means a draw. Most round wins takes the match.\nESC pauses. M mutes. H closes this panel.",23,cream);
-            if (Button(455,510,370,45,"CLOSE HANDBOOK")) help=false;
+            Frame(140,120,1000,525);
+            Label(180,135,920,52,"THE DUELIST'S HANDBOOK",35,cream);
+            Label(180,195,920,370,"P1: A / D move, W jump, S guard, F punch, G shove, R spell, T power.\nP2: Left / Right move, Up jump, Down guard, J punch, K shove, U spell, I power.\n\nTap punch three times with a short pause between strikes to finish a combo.\nSpells cost 20 arcana; power attacks cost 60. Arcana regenerates.\nFive unguarded hits knock a duelist down temporarily, never eliminate.\nEvery attack knocks back. Drive your rival into a rune rift at either stage edge.\nPlay all 3 arenas. 99 seconds per round. No ring out means a draw. Most round wins takes the match.\nXbox: stick/D-pad move, A jump, LB guard, X punch, B push, Y spell, RB power.\nPS4: Cross jump, L1 guard, Square punch, Circle push, Triangle spell, R1 power.\nMenu/Options pauses; View/Share or H closes help. M mutes.",20,cream);
+            if (Button(455,580,370,45,"CLOSE HANDBOOK")) help=false;
         }
         void OnApplicationFocus(bool focus) { if (!focus && screen==ScreenState.Fight && model!=null && !model.Finished) paused=true; }
 #if UNITY_EDITOR

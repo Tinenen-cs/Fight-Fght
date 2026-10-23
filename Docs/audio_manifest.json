@@ -1,0 +1,169 @@
+{
+  "sample_rate": 22050,
+  "channels": 2,
+  "composition": "Original procedural chamber-fantasy music; harp, celesta, flute, strings and choir synthesis. No third-party samples.",
+  "music": [
+    {
+      "file": "Assets/Resources/Audio/Music/Menu.wav",
+      "seconds": 24.615,
+      "peak": 0.68,
+      "rms": 0.1568,
+      "seam_delta": 0.0089,
+      "sha256": "559729d6de068519999dfa1eafd5752ebd9924d20d562bae1b528c411816958e",
+      "title": "The Forbidden Admission",
+      "bpm": 78,
+      "voices": [
+        "celesta",
+        "choir",
+        "harp",
+        "celesta"
+      ]
+    },
+    {
+      "file": "Assets/Resources/Audio/Music/Witchwood.wav",
+      "seconds": 19.2,
+      "peak": 0.68,
+      "rms": 0.1553,
+      "seam_delta": 0.0198,
+      "sha256": "41a40c7b3ad9c595d48495251c3b7f255008fe02d11b99f154fc950093b78c3f",
+      "title": "Dawn Among the Wards",
+      "bpm": 100,
+      "voices": [
+        "flute",
+        "strings",
+        "harp",
+        "celesta"
+      ]
+    },
+    {
+      "file": "Assets/Resources/Audio/Music/ObsidianHall.wav",
+      "seconds": 22.857,
+      "peak": 0.68,
+      "rms": 0.1462,
+      "seam_delta": 0.0227,
+      "sha256": "7157b8b6e8981b3d633a0725d8f1b0e45563010fa70ed90c18b1fe08c6f45ed1",
+      "title": "Sunlit Grimoire",
+      "bpm": 84,
+      "voices": [
+        "harp",
+        "strings",
+        "harp",
+        "celesta"
+      ]
+    },
+    {
+      "file": "Assets/Resources/Audio/Music/AstralTower.wav",
+      "seconds": 26.667,
+      "peak": 0.68,
+      "rms": 0.1517,
+      "seam_delta": 0.0037,
+      "sha256": "31d143faf636ef191968cd26bd04345a9563daaecff4162da16f7984f764c0f6",
+      "title": "Constellations After Curfew",
+      "bpm": 72,
+      "voices": [
+        "celesta",
+        "choir",
+        "harp",
+        "celesta"
+      ]
+    }
+  ],
+  "sfx": [
+    {
+      "file": "Assets/Resources/Audio/SFX/select.wav",
+      "seconds": 0.24,
+      "peak": 0.6,
+      "rms": 0.1661,
+      "seam_delta": 0.0,
+      "sha256": "837f48fc4696ee6b15b9c6f41f49c97896185e725c3bf6f2cb4fcbe5e6aa3404"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/confirm.wav",
+      "seconds": 0.65,
+      "peak": 0.6,
+      "rms": 0.1748,
+      "seam_delta": 0.0,
+      "sha256": "9c4c05204409c362f098545482f07fa65ea37eb7946b3c013eaa1cb8a4241cbc"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/punch.wav",
+      "seconds": 0.27,
+      "peak": 0.6,
+      "rms": 0.0762,
+      "seam_delta": 0.0,
+      "sha256": "3ea46a802b445bf36b7b49d7b7a8a41c84c1a0ea0082cb2ef499d35ed6473360"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/hit.wav",
+      "seconds": 0.36,
+      "peak": 0.6,
+      "rms": 0.0775,
+      "seam_delta": 0.0,
+      "sha256": "0d655687b4e3e7dae56ab664ce35c30de87f8e396a6c254ab6ced50a77a5ece1"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/cast.wav",
+      "seconds": 0.8,
+      "peak": 0.6,
+      "rms": 0.1713,
+      "seam_delta": 0.0,
+      "sha256": "7bf9b3aa34565e1a299bfb2036bc2e0f092413270f0ebb2cc57cfddbd551948c"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/power.wav",
+      "seconds": 1.25,
+      "peak": 0.7,
+      "rms": 0.1832,
+      "seam_delta": 0.0,
+      "sha256": "6ffee437b0359bac35b7f7c5b1262216ebf2f54e46e3ba1a1905a4c1cd77e23c"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/jump.wav",
+      "seconds": 0.38,
+      "peak": 0.6,
+      "rms": 0.1893,
+      "seam_delta": 0.0,
+      "sha256": "c9bb37fe5d19237baa6acfe27355c73c7bb3fef582e6494582d1c3cd0fdcec1b"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/step.wav",
+      "seconds": 0.15,
+      "peak": 0.6,
+      "rms": 0.0946,
+      "seam_delta": 0.0,
+      "sha256": "2c564d32e6dbe57b4ff2c34754a4ac8ec7f6831fad966caecf15c29d5b5f27d9"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/fall.wav",
+      "seconds": 1.15,
+      "peak": 0.7,
+      "rms": 0.2024,
+      "seam_delta": 0.0,
+      "sha256": "24b58b0534dd344c72cea71fff22ea9e21304a6ac469ee8277e6094fa5b3724c"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/win.wav",
+      "seconds": 1.7,
+      "peak": 0.7,
+      "rms": 0.1289,
+      "seam_delta": 0.0,
+      "sha256": "d02a70b085c7e6a891f73effd8182bb1271bcfba154f31c834e1a3803be913b4"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/bell.wav",
+      "seconds": 0.8,
+      "peak": 0.6,
+      "rms": 0.1826,
+      "seam_delta": 0.0,
+      "sha256": "408079fe2851981a6ece05790b59d59680fee48280b18e9d782a35232cc402be"
+    },
+    {
+      "file": "Assets/Resources/Audio/SFX/block.wav",
+      "seconds": 0.48,
+      "peak": 0.6,
+      "rms": 0.0761,
+      "seam_delta": 0.0,
+      "sha256": "d30c4f7d53dc0caff6ab31903dad192ecdc38fada9fc8940c6528af9179ccc70"
+    }
+  ]
+}

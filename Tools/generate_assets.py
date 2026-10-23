@@ -136,8 +136,10 @@ def sound(path,notes,duration,volume=.17):
     path.parent.mkdir(parents=True,exist_ok=True)
     with wave.open(str(path),'wb') as w: w.setparams((1,2,rate,0,'NONE','not compressed')); w.writeframes(struct.pack('<'+'h'*len(samples),*samples))
 for name,notes in {'select':[440,660],'confirm':[440,554,880],'punch':[160,90],'hit':[100,65],'cast':[330,440,660],'power':[220,330,440,660],'jump':[180,300],'step':[75],'fall':[400,200,100,50],'win':[330,440,554,660],'bell':[880,660],'block':[220,170]}.items():
-    sound(ROOT/'Audio'/'SFX'/(name+'.wav'),notes,.12 if name=='step' else .32 if name not in ('win','power') else .8)
+    path=ROOT/'Audio'/'SFX'/(name+'.wav')
+    if not path.exists(): sound(path,notes,.12 if name=='step' else .32 if name not in ('win','power') else .8)
 for i,name in enumerate(['Menu','Witchwood','ObsidianHall','AstralTower']):
     base=[220,261.63,329.63,293.66,220,196,246.94,164.81]
-    sound(ROOT/'Audio'/'Music'/(name+'.wav'),[x*(1+i*.125) for x in base*4],16,.085)
-print('Ensured artwork exists (existing art preserved); generated 16 WAV files.')
+    path=ROOT/'Audio'/'Music'/(name+'.wav')
+    if not path.exists(): sound(path,[x*(1+i*.125) for x in base*4],16,.085)
+print('Ensured legacy art/audio exist; existing final assets are preserved.')

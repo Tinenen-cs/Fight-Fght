@@ -55,8 +55,8 @@ Updated: 23 October 2026. Checked boxes mean implemented or specifically verifie
 ## Future polish
 
 - [ ] Further hand-polish generated frame alignment and special behaviors after playtesting.
-- [ ] More distinctive stage music and richer combat audio.
-- [ ] Gamepad support if requested.
+- [x] Replace stage music with distinct wizarding scores and all twelve sound effects with magical cues.
+- [x] Central input manager with keyboard, Xbox and PS4 bindings; independent controller slots, menu navigation, hot-plug and adaptive prompts.
 - [ ] SpriteRenderer/Animator/UI prefab migration if needed for classroom workflow.
 - [ ] Standalone desktop build and platform-specific validation if requested.
 
@@ -73,7 +73,29 @@ Open `Assets/Scenes/Main.unity`, press Play, any key, then F and J to lock the d
 - [x] Text-only wizard title with any-key/click start.
 - [x] Reference-inspired opposing fighter previews, side biographies, compact center roster and independent locks.
 - [x] Opening-stage selection with morning, afternoon and night previews.
-- [x] Four-hit temporary knockdown, recovery, guard immunity to hit counting, ring-out-only elimination.
+- [x] Five-hit temporary knockdown, recovery, guard immunity to hit counting, ring-out-only elimination.
 - [x] Native saved Main scene preview before Play.
 
 - [x] Save eight independently generated head-reaction sheets (32 frames) and wire them to live HUD and roster.
+
+## Fight HUD and controllers
+
+- [x] Mirror portrait/name HUD with five poise segments, arcana meter, round-win markers and central timer.
+- [x] Set knockdown to five unguarded hits; refill poise on recovery and keep ring-out-only elimination.
+- [x] Visible circular lower-side controls, spell-cost previews and casting effects.
+- [x] Add editable two-player Input System action maps.
+- [x] Verify virtual controller and keyboard isolation, navigation, deadzone, press edges, disconnect/replacement, Xbox and PlayStation prompts.
+- [ ] Physical Xbox and DualShock 4 tests on this Mac over USB/Bluetooth.
+
+## Five-bar and portal clearance update
+
+- [x] Five poise bars; five unguarded hits trigger temporary knockdown.
+- [x] Flat afternoon library floor and common fighting baseline for all stages.
+- [x] Dedicated illustrated diamond ability icons, one four-icon generation per character.
+- [x] Diamond control clusters placed below the complete portal bounds.
+- [x] Add layout checks for every ability button against both portal rectangles.
+
+- [x] Remove circular frames from head portraits.
+- [x] Simplify the fight view to icons and compact binding badges; move extra information into help.
+- [x] Check audio waveform identity, stereo format, peak headroom and loop boundaries.
+- [ ] Listen on the Mac and tune the new scores/SFX balance with two players.

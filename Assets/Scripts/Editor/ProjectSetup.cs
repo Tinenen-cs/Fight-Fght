@@ -72,11 +72,18 @@ namespace Hexbound.Editor
         {
             EnsureScene();
             RuleChecks.Run();
+            for(int side=0;side<2;side++) for(int action=0;action<4;action++) {
+                Rect icon=CombatHudLayout.Ability(side,action);
+                Require(icon.yMin>=CombatHudLayout.ControlsTop,"controls remain below portal-safe boundary");
+                Require(!icon.Overlaps(CombatHudLayout.Portal(DuelModel.LeftRiftX)) && !icon.Overlaps(CombatHudLayout.Portal(DuelModel.RightRiftX)),"controls never cover either portal");
+            }
+            Require(Resources.Load<UnityEngine.InputSystem.InputActionAsset>("Input/AcademyControls")!=null,"editable input action maps");
             for (int i=0;i<8;i++) {
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/sheet")!=null,"sprite "+i);
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/avatar")!=null,"avatar "+i);
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/portraits")!=null,"head reactions "+i);
                 Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/showcase")!=null,"selection showcase "+i);
+                Require(Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/abilities")!=null,"diamond ability icons "+i);
                 Require(Resources.Load<Texture2D>("Effects/"+Roster.Files[i])!=null,"effect "+i);
                 var sheet=Resources.Load<Texture2D>("Characters/"+Roster.Files[i]+"/sheet");
                 Require(sheet.width==512 && sheet.height==1280,"128-pixel fighter atlas "+i);
@@ -85,6 +92,10 @@ namespace Hexbound.Editor
             Require(Resources.Load<Texture2D>("UI/AcademyPanel")!=null,"academy panel skin");
             Require(Resources.Load<Texture2D>("UI/AcademyButton")!=null,"academy button skin");
             Require(Resources.LoadAll<AudioClip>("Audio").Length==16,"16 audio files");
+            for(int i=0;i<3;i++) {
+                var track=Resources.Load<AudioClip>("Audio/Music/"+Roster.StageFiles[i]);
+                Require(track!=null && track.channels==2 && track.length>18,"distinct stereo arena score "+i);
+            }
             Debug.Log("HEXBOUND VALIDATION PASSED: rules and imported assets");
         }
         static void Require(bool pass,string name) { if (!pass) throw new System.Exception("Missing "+name); }

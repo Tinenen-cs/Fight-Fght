@@ -45,6 +45,7 @@ namespace Hexbound
         public bool Finished => winner != -2;
         public bool MatchFinished => Finished && round == 3;
         public bool RiftsOpen => true;
+        public const int KnockdownHits=5;
         public const float LeftRiftX=100, RightRiftX=1180;
         public static bool OverRift(float x) => Math.Abs(x-LeftRiftX)<36 || Math.Abs(x-RightRiftX)<36;
         readonly int startingArena;
@@ -156,7 +157,7 @@ namespace Hexbound
             bool guard=target.blocking;
             target.knockback=force*(guard?.35f:1); target.stun=guard?.08f:.22f;
             target.attackPending=false; target.actionTime=0;
-            if(!guard && !target.IsKnockedDown && ++target.hitsTowardKnockdown>=4) {
+            if(!guard && !target.IsKnockedDown && ++target.hitsTowardKnockdown>=KnockdownHits) {
                 target.hitsTowardKnockdown=0; target.knockdownTime=1.4f; target.knockdownElapsed=0; target.blocking=false;
             }
             target.pose=target.IsKnockedDown?Pose.Knockout:Pose.Hurt;

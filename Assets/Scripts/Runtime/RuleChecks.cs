@@ -51,7 +51,7 @@ namespace Hexbound
             d=Close();
             for(int i=0;i<3;i++) { d.players[0].x=300; d.players[1].x=395; d.players[1].knockback=0;
                 d.Tick(1f/60,new DuelInput { punch=true },default(DuelInput)); Step(d,20); }
-            Check(d.players[0].combo==3 && d.players[1].x>440,"combo finishes with stronger knockback");
+            Check(d.players[0].combo==3 && d.players[1].x>440 ,"combo finishes with stronger knockback");
             for (int id=0;id<8;id++) {
                 d=new DuelModel(id,0); d.players[0].x=DuelModel.RightRiftX-290; d.players[1].x=DuelModel.RightRiftX-44;
                 d.Tick(.016f,new DuelInput { special=true },default(DuelInput)); Step(d,120);
@@ -86,12 +86,12 @@ namespace Hexbound
             d.elapsed=99; d.Tick(.016f,default(DuelInput),default(DuelInput)); d.NextRound();
             Check(d.ArenaIndex==0,"arenas rotate from selected opening stage");
             d=Close();
-            for(int hit=0;hit<4;hit++) {
+            for(int hit=0;hit<5;hit++) {
                 d.players[0].x=400; d.players[1].x=495; d.players[1].knockback=0;
                 d.Tick(1f/60,new DuelInput { punch=true },default(DuelInput)); Step(d,20);
-                if(hit==2) Check(!d.players[1].IsKnockedDown,"three hits do not knock down");
+                if(hit==3) Check(!d.players[1].IsKnockedDown,"four hits do not knock down");
             }
-            Check(d.players[1].IsKnockedDown && !d.Finished && !d.players[1].fallen,"four hits knock down without elimination");
+            Check(d.players[1].IsKnockedDown && !d.Finished && !d.players[1].fallen,"five hits knock down without elimination");
             Check(d.players[0].wins==0 && d.players[1].wins==0,"knockdown awards no round win");
             float downX=d.players[1].x;
             d.players[1].knockback=0; d.players[1].mana=100;

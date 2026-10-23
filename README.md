@@ -57,7 +57,8 @@ The live task list is [Docs/TODO.md](Docs/TODO.md). Per-action artwork progress 
 | 7 | Four music loops and twelve sound effects | Included and connected |
 | 8 | Automated combat checks / Unity import and compile | Passed; see validation notes |
 | 9 | Two-person hardware playtest | Pending |
-| 10 | Gamepad, online play, mobile and distributable builds | Outside this first prototype |
+| 10 | Keyboard, Xbox and PS4 input | Implemented; physical controller checks pending |
+| 11 | Online play, mobile and distributable builds | Outside this prototype |
 
 ## Features
 
@@ -66,7 +67,7 @@ The live task list is [Docs/TODO.md](Docs/TODO.md). Per-action artwork progress 
 - Idle, walk, punch, hurt, knockout, combo, spell, power, shove and jump animation rows.
 - Mana regeneration and mana gains on melee contact; stronger attacks require resource management.
 - Direction automatically faces the other fighter. Jumping lets fighters pass one another.
-- Ambient chiptune loops for selection and each arena; cues for movement, combat, UI, timer alerts and results.
+- Original wizard-academy chamber-style loops for selection and each arena; cues for movement, combat, UI, timer alerts and results.
 - Focus loss pauses combat. Escape pauses/resumes, H opens help, and M saves a mute preference.
 - No external runtime packages; built-in Unity modules keep initial setup small.
 
@@ -134,7 +135,7 @@ The prototype uses a pure C# combat model and Unity's immediate-mode GUI to draw
 
 ## Audio credits
 
-All music and sound effects are original synthesis from `Tools/generate_assets.py`; no commercial songs or recordings are used. Music is intentionally simple chiptune material and can be replaced later. `select`, `confirm`, `punch`, `hit`, `cast`, `power`, `jump`, `step`, `fall`, `win`, `bell`, and `block` cues are connected to game events.
+All music and sound effects are original synthesis from `Tools/generate_wizard_audio.py`; no commercial songs, third-party samples or recordings are used. Four distinct scores use harp, celesta, flute, strings and choir-style synthesis, with different melodies, tempos and harmony for the menu and each arena. `select`, `confirm`, `punch`, `hit`, `cast`, `power`, `jump`, `step`, `fall`, `win`, `bell`, and `block` cues are connected to game events.
 
 ## Art and font credits
 
@@ -164,13 +165,13 @@ Tiny5 comes from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/ti
 
 ### B. Other devices
 
-Desktop source may be opened with Unity, but Windows/Linux and standalone builds have not been tested. Browser, Android, iOS, touch controls and controllers are not part of this prototype. Use the Mac Unity Editor first.
+Desktop source may be opened with Unity, but Windows/Linux and standalone builds have not been tested. Browser, Android, iOS and touch controls are not part of this prototype. Xbox and PS4 controller bindings are included; physical controller testing is pending. Use the Mac Unity Editor first.
 
 ## Troubleshooting
 
 - **Version mismatch:** the current project record follows your open **6000.3.27f1** Editor. The original prototype was tested on **6000.2.2f1**; avoid switching a project while it is open in another Editor.
 - **Empty scene:** use Hexbound → Open Main Scene. Main contains a saved arena preview visible before Play; the full menu appears after Play. Use Hexbound → Prepare Visible Scene Preview to rebuild the preview. Unsaved scenes are preserved.
-- **Keys do nothing:** click the Game view. Escape resumes after focus loss. Under Project Settings → Player, keep Active Input Handling on **Input Manager (Old)** or **Both**; this project uses `UnityEngine.Input`.
+- **Keys do nothing:** click the Game view. Escape resumes after focus loss. Under Project Settings → Player, keep Active Input Handling on **Both**; gameplay and menus use the Unity Input System, with legacy input retained for the mute shortcut. Restart Unity after changing input backends.
 - **Too many simultaneous keys:** some keyboards cannot register both players' held keys. Try a second USB keyboard or release guard before attacking; physical keyboard testing is pending.
 - **No sound:** press M, disable the Game view mute toggle, and check macOS output volume.
 - **Spell does not start:** regular spells require 20 arcana, power attacks 60. Wait for regeneration or land melee hits.
@@ -190,12 +191,45 @@ Desktop source may be opened with Unity, but Windows/Linux and standalone builds
    git push origin main
    ```
 
-Do not commit Unity caches, credentials, local logs, or generated application builds. To rebuild runtime art from committed sources, install Pillow and run `python3 Tools/import_academy_art.py`, then `python3 Tools/assemble_sequences.py`. `python3 Tools/generate_assets.py` regenerates audio and only fills missing legacy artwork; existing final art is preserved and let Unity reimport. See [Docs/ASSET_GUIDE.md](Docs/ASSET_GUIDE.md) before changing sheet dimensions.
+Do not commit Unity caches, credentials, local logs, or generated application builds. To rebuild runtime art from committed sources, install Pillow and run `python3 Tools/import_academy_art.py`, then `python3 Tools/assemble_sequences.py`. `python3 Tools/generate_assets.py` only fills missing legacy assets and preserves final artwork/audio. To rebuild the wizard scores and sound effects, install NumPy and run `python3 Tools/generate_wizard_audio.py`, then let Unity reimport. See [Docs/ASSET_GUIDE.md](Docs/ASSET_GUIDE.md) before changing sheet dimensions.
 
 ## Updated duel flow
 
 Press any key or click on the text-only wizard title → both players choose apprentices → choose the opening arena → duel. Character selection uses opposing large fighter artwork, side biographies, and a compact two-row roster inspired by the supplied layout. Each fighter has four authored head reactions for the HUD: focused, hurt, dazed and victorious.
 
-Every round lasts 99 seconds. No ring-out before time expires means a draw, including when a fighter is knocked down. Four unguarded hits cause a 1.4-second knockdown, then the fighter recovers; knockdown never awards a win. Guarded hits do not count. Only falling into either forbidden rune rift eliminates a fighter. All three arenas rotate from your selected opening stage: morning gates, afternoon library, night observatory.
+Every round lasts 99 seconds. No ring-out before time expires means a draw, including when a fighter is knocked down. Five unguarded hits cause a 1.4-second knockdown, then the fighter recovers; knockdown never awards a win. Guarded hits do not count. Only falling into either forbidden rune rift eliminates a fighter. All three arenas rotate from your selected opening stage: morning gates, afternoon library, night observatory.
 
 Head artwork and prompts are in `Assets/Art/PortraitSources` and `Docs/portrait_art_manifest.json`; rebuild with `python3 Tools/import_portraits.py`. Title typography uses Cinzel Decorative, licensed under the included OFL in `Assets/Art/Fonts`.
+
+## Keyboard, Xbox and PS4 input
+
+The central input manager is `Assets/Scripts/Runtime/AcademyInputManager.cs`. Editable bindings are in `Assets/Resources/Input/AcademyControls.inputactions`; double-click this asset in Unity to edit the two player action maps. Input System 1.14.1 is pinned in the package manifest. Active Input Handling is set to Both; allow Unity to finish importing and restart the Editor if prompted.
+
+| Action | Player 1 keyboard | Player 2 keyboard | Xbox | PS4 |
+| --- | --- | --- | --- | --- |
+| Move / menu navigation | WASD | Arrows | Left stick / D-pad | Left stick / D-pad |
+| Jump / menu confirm | W / F or Enter | Up / J or Enter | A | Cross |
+| Guard (hold) | S | Down | LB | L1 |
+| Punch / combo | F | J | X | Square |
+| Shove / menu back | G / Esc | K / Esc | B | Circle |
+| Spell (20 arcana) | R | U | Y | Triangle |
+| Power (60 arcana) | T | I | RB | R1 |
+| Pause / resume | Esc | Esc | Menu | Options |
+| Help | H | H | View | Share |
+
+The first connected controller owns Player 1, the second Player 2. Both keyboard sets remain available, so one controller plus keyboard or two controllers can play. A remaining controller keeps its player slot after another disconnects; a replacement fills the vacant slot. Disconnecting an assigned controller pauses an active fight. Use Menu/Options or Esc to resume. Button prompts follow the last input used by that player. Pair controllers in macOS Bluetooth settings or connect by USB before Play; actual device compatibility depends on macOS and the controller model ([Unity gamepad support](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.14/manual/Gamepad.html)).
+
+The five large top segments show remaining poise, not lives. Each clean hit removes one; the fifth knocks the player down for 1.4 seconds, then all five refill. Guarded contacts reduce knockback but do not remove poise. Only a rift fall eliminates. The thin blue meter is spell arcana. Diamond clusters below the portals show dedicated punch, shove, spell and power icons, with only compact key/button badges. Movement, jump, guard, spell costs and full rules are in the help screen (H, View or Share).
+
+## Wizarding audio and clean fight view
+
+| Screen / arena | Original score | Style |
+| --- | --- | --- |
+| Title / selection | The Forbidden Admission | Mysterious celesta, choir and harp |
+| Morning gates | Dawn Among the Wards | Brighter flute, strings and harp |
+| Afternoon library | Sunlit Grimoire | Warm plucked harp and strings |
+| Night observatory | Constellations After Curfew | Sparse celesta, choir and moonlit chimes |
+
+Music switches automatically when the selected arena starts and when moving to the next arena. Twelve replacement effects cover crystalline menus, ward blocks, spell casts, power surges and portal falls. Audio metrics, titles and reproduction details are recorded in `Docs/audio_manifest.json`. Physical listening/volume tuning remains part of your Mac playtest.
+
+The active fight view keeps plain head portraits, names, five poise segments, a thin arcana meter, round markers, timer and four diamond ability icons per player. Only small key/controller badges appear on the icons. Device labels, large control legends, cost descriptions, stage banners and rule footers are removed from combat; press H or View/Share for details.

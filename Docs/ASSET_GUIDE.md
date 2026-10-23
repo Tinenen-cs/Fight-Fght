@@ -52,3 +52,9 @@ Commit Unity `.meta` files whenever assets are added or moved. `Assets/Animation
 `Assets/Art/PortraitSources/<fighter>.png` is one separately generated four-frame 2×2 head sheet per fighter. Reading order is focused, hurt, dazed, victorious. `Tools/import_portraits.py` fits full heads with padding into 128px cells and creates a 256×256 runtime `portraits.png`, plus the neutral `avatar.png`. The HUD chooses the current reaction; roster cards use the neutral head. `assemble_sequences.py` preserves authored portraits instead of replacing them with body crops.
 
 `showcase.png` is a 512px nearest-neighbor copy of each original character reference for large opposing selection previews. These are independent of the battle animation atlases. `Docs/portrait_art_manifest.json` and `Docs/lighting_art_manifest.json` record built-in image-tool prompts and committed source destinations.
+
+## Diamond ability icons
+
+Each fighter has a separately generated four-icon source in `Assets/Art/AbilityIconSources/<fighter>.png`, with full prompts in `Docs/ability_icon_manifest.json`. Order is punch, shove, spell and power (2×2 reading order). `Tools/import_ability_icons.py` crops/pads each complete illustrated diamond into a 128px cell and saves a 256×256 `abilities.png` atlas. Runtime HUD renders the four icons in a mirrored diamond arrangement; no body-sprite crops are used as ability icons.
+
+The afternoon floor edit is recorded in `Docs/flat_library_prompt.json`. `Tools/import_academy_art.py` retains point-sampled 640×360 stage art. `CombatHudLayout` keeps portal and control bounds explicit and separate.

@@ -49,23 +49,32 @@ namespace Hexbound.Editor
             }
             if (step==6) Invoke(game,"StartMatch");
             if (step==9) game.CapturePreview("Docs/Previews/03-fight.png");
-            if (step==10 || step==13) {
+            if(step==10) {
+                var effectModel=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
+                effectModel.Tick(.016f,new DuelInput { special=true },default(DuelInput));
+                for(int i=0;i<16;i++) effectModel.Tick(.016f,default(DuelInput),default(DuelInput));
+                if(effectModel.spells.Count==0) throw new Exception("Spell preview did not create a projectile");
+                game.CapturePreview("Docs/Previews/10-spell-controls.png");
+            }
+            if (step==11 || step==14) {
                 var model=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
                 model.players[1].x=DuelModel.RightRiftX;
                 model.Tick(.016f,default(DuelInput),default(DuelInput));
                 if (!model.Finished || model.winner!=0) throw new Exception("Ring-out did not finish arena");
                 model.NextRound(); Invoke(game,"BeginRound");
+                var music=(AudioSource)typeof(AcademyGame).GetField("music",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
+                if(music.clip==null || music.clip.name!=Roster.StageFiles[model.ArenaIndex]) throw new Exception("Stage music did not switch to the selected arena track");
             }
-            if (step==12) game.CapturePreview("Docs/Previews/05-library.png");
-            if (step==15) game.CapturePreview("Docs/Previews/06-observatory.png");
-            if (step==16) {
+            if (step==13) game.CapturePreview("Docs/Previews/05-library.png");
+            if (step==16) game.CapturePreview("Docs/Previews/06-observatory.png");
+            if (step==17) {
                 var model=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
                 model.players[1].x=DuelModel.RightRiftX;
                 model.Tick(.016f,default(DuelInput),default(DuelInput));
                 if (!model.MatchFinished || model.players[0].wins!=3) throw new Exception("Three ring-out match failed");
             }
-            if (step==18) game.CapturePreview("Docs/Previews/07-ringout-result.png");
-            if (step==19) {
+            if (step==19) game.CapturePreview("Docs/Previews/07-ringout-result.png");
+            if (step==20) {
                 var model=(DuelModel)typeof(AcademyGame).GetField("model",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(game);
                 if (model==null) throw new Exception("No runtime model");
                 Debug.Log("HEXBOUND RUNTIME SMOKE PASSED: academy title, selection, all three arenas with both edge traps, and three-ring-out match result");
