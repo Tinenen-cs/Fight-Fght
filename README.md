@@ -13,7 +13,7 @@ Repository: **[Tinenen-cs/Fight-Fght](https://github.com/Tinenen-cs/Fight-Fght)*
 | Device | Output | Status |
 | --- | --- | --- |
 | macOS | Unity Editor playtest | Compiled, asset-validated and visually smoke-tested with installed 6000.2.2f1 |
-| Requested Unity | 6000.3.27f1 | Target version; not installed on this Mac at implementation time |
+| Project Unity version | 6000.2.2f1 | Selected for this Mac and verified |
 | Windows / Linux | Editor / future desktop build | Not tested |
 | Browser / mobile | Future builds | No touch controls or builds |
 
@@ -56,7 +56,7 @@ The live task list is [Docs/TODO.md](Docs/TODO.md). Evidence and limitations are
 | 6 | Combat, combo, spells, power attacks, guard, jump and manhole | Implemented |
 | 7 | Four music loops and twelve sound effects | Included and connected |
 | 8 | Automated combat checks / Unity import and compile | Passed; see validation notes |
-| 9 | Requested 6000.3.27f1 and two-person hardware playtest | Pending |
+| 9 | Two-person hardware playtest | Pending |
 | 10 | Gamepad, online play, mobile and distributable builds | Outside this first prototype |
 
 ## Features
@@ -147,7 +147,7 @@ Tiny5 comes from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/ti
    git clone https://github.com/Tinenen-cs/Fight-Fght.git
    cd Fight-Fght
    ```
-2. In **Unity Hub → Installs**, install/select **6000.3.27f1** if available. Unity versions use `27f1`, not `27.f1`. That requested version is recorded in `ProjectSettings/ProjectVersion.txt`; this Mac's available editor during implementation was **6000.2.2f1**, used for validation. The exact requested version still needs a test.
+2. In **Unity Hub → Installs**, select **6000.2.2f1**. This is the installed, verified version for this Mac and is recorded in `ProjectSettings/ProjectVersion.txt`.
 3. In **Projects → Add project from disk**, choose the root `Fight-Fght` folder containing `Assets`, `Packages`, and `ProjectSettings`.
 4. Let Unity finish importing and compiling. Open **Assets → Scenes → Main**, or use **Hexbound → Open Main Scene**.
 5. Open the **Game** tab, choose **16:9** (preferably **1280 × 720**), and press **Play**. The title/UI appears during Play.
@@ -162,7 +162,7 @@ Desktop source may be opened with Unity, but Windows/Linux and standalone builds
 
 ## Troubleshooting
 
-- **Version mismatch:** choose your installed Unity 6 version in Hub; requested-version validation remains pending until 6000.3.27f1 is installed and tested. Keep version changes in source control.
+- **Version mismatch:** select **6000.2.2f1** in Unity Hub for this project. No editor upgrade is needed on this Mac.
 - **Empty scene / no UI before Play:** open Main and press Play. The runtime UI is intentionally generated when the game runs.
 - **Keys do nothing:** click the Game view. Escape resumes after focus loss. Under Project Settings → Player, keep Active Input Handling on **Input Manager (Old)** or **Both**; this project uses `UnityEngine.Input`.
 - **Too many simultaneous keys:** some keyboards cannot register both players' held keys. Try a second USB keyboard or release guard before attacking; physical keyboard testing is pending.

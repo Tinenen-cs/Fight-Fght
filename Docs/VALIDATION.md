@@ -2,6 +2,8 @@
 
 Date: **23 October 2026**, macOS. This is a student prototype with procedural pixel art and synthesized audio.
 
+The project is pinned to **6000.2.2f1**, as selected by the user for this Mac.
+
 ## Passed
 
 | Check | Result | Evidence |
@@ -29,7 +31,6 @@ An initial screen-desktop capture produced cropped images because of display sca
 
 ## Still to verify
 
-- **Unity 6000.3.27f1:** requested target. It was not installed here. The saved project version is set to that request after local verification. Opening with another Unity version may update project settings.
 - Physical two-person simultaneous keyboard input and key rollover.
 - Listening to every sound through the Mac's actual output and checking loop seams/volume.
 - A complete human playthrough of all three arenas and several fighter pairings; automated rule checks verify outcomes but do not judge combat feel.
@@ -48,7 +49,7 @@ Tools/test_rules.sh
 If another editor version supplies Mono, set its bin directory:
 
 ```bash
-UNITY_MONO="/Applications/Unity/Hub/Editor/6000.3.27f1/Unity.app/Contents/MonoBleedingEdge/bin" Tools/test_rules.sh
+UNITY_MONO="/Applications/Unity/Hub/Editor/6000.2.2f1/Unity.app/Contents/MonoBleedingEdge/bin" Tools/test_rules.sh
 ```
 
 Unity compilation/import/rule validation (use the path to your installed editor):
